@@ -41,7 +41,7 @@ function Bet({handleClick, wagerAmount, setWagerAmount, bet, setBet, error}){
     }
     return(
         <>
-        <h3 className='font-header text-center mt-8 mb-2 text-2xl'>It's gonna be:</h3>
+        <h3 className='font-header text-center mt-2 mb-2 text-2xl'>It's gonna be:</h3>
         <div className="grid grid-cols-3 gap-6">
             {/* have onclick's for sending what is bet */}
             {/* I like the way this looks once its already been selected. */}

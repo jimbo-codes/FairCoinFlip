@@ -4,16 +4,22 @@ import Bet from './Bet';
 import Socials from './Socials'
 import Confirm from './Confirm'
 import Navigation from './Navigation'
+import coinF from '../images/CoinFront.png';
+import coinB from '../images/CoinBack.png';
+
 // import Flipped from './Flipped';
 
 
 function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [spin, setSpin] = useState(false);
+    let coin = document.querySelector(".coin");
 
     function handleClick(){
     // bet, wagerAmount
     if(!!bet && !!wagerAmount){
+        setError('')
         setConfirm(true)
     }else {
         setError('You must select either heads or tails, and a wager.')
@@ -34,10 +40,15 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
     // .then(console.log('clicked'))
     }
 
-    function handleGamble(){
-        let answer = Math.random();
+    
 
-    // I THINK THIS SHOULDN"T BE EQUAL HERE? -- confirm the math.
+    function handleGamble(){
+
+        // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
+        let answer = Math.random();
+        setSpin(true)
+        setConfirm(false);
+    // Pretty sure this shouldn't be greater than or equal to here -- confirm the math.
     if(answer<=0.5){
         setResult('Heads');
         if(bet===1){
@@ -53,18 +64,33 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
             setOutcome(false)
         }
     }
+        // Make that coin spin beyotch
+        coin.style.animation = "none";
+        if(answer<=0.5){
+            setTimeout(function(){
+                coin.style.animation = "spin-heads 3s forwards";
+            }, 100);
+        }
+        else{
+            setTimeout(function(){
+                coin.style.animation = "spin-tails 3s forwards";
+            }, 100);
+        }   
+        // Timeout after the coin spins to send you to results
+        setTimeout(()=>{navigate('/result')}, 3000);
 
-    // AFTER DETERMINING RESULT:
     console.log("Random Seed: " +answer);
-    navigate('/result');
+    console.log("Wager: "+wagerAmount)
+    
     }
 
     // Have a popup disclaimer once wallet is connected "saying I certify / agree that this is not illegal where I am, etc."
         return(
         <>
+        <Navigation/>
         <div>
-            <h1 className="font-header text-center mt-8 mb-2 text-6xl">Double or nothing.</h1>
-            <h3 className="font-header text-center mt-2 mb-2 text-xl">With the lowest fees of any coin flip game.</h3>
+            <h1 className="font-header text-center mt-6 mb-2 text-6xl">Double or nothing.</h1>
+            {logged?null:<h3 className="font-header text-center mt-2 mb-2 text-xl">With the lowest fees of any coin flip game.</h3>}
             {/* Adds line if not logged in */}
             {logged?null:<h3 className="font-header text-center mt-2 mb-2 text-xl"style={{ fontSize: 'medium' }}>(and no network outages, sorry Solana).</h3>}
             <h3 className="font-header text-center mt-2 mb-2 text-xl">
@@ -76,13 +102,31 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
                 <div className="grid place-items-center align-middle" >
 
                     {/* SET THE IMAGE DISPLAYED BASED ON BEING HEADS OR TAILS. Figure out a flipping animation too. */}
-                    <img className="float-left justify-center lg h-32 w-auto"
-                    src="https://i.ibb.co/7Js60Ym/Dcf.png"
-                    alt="Degen Coin Flip"/>
+                    {/* <div className="relative"> */}
+                    <div className="coin" id="coin">
+                    <div className="heads"> 
+                        <img className="float-left justify-center lg h-42 w-auto"
+                        src={coinF}
+                        alt="Degen Coin Flip"/>
+                        </div>
+
+                        <div className="tails absolute justify-center ">
+                        <img className="float-left justify-center lg h-32 w-auto"
+                        src={coinB}
+                        alt="Degen Coin Flip"/>
+                        </div>
+                    </div>
+
+{/* TEMPORARY - REMOVE THESE ONCE SPINNING WORKS. */}
+                    {/* <div class="buttons">
+   <button className='temp' id="flip-button">Flip Coin</button>
+   <button className='temp' id="reset-button">Reset</button>
+</div> */}
 
                     {/* Render the betting if result is empty. */}
                     {result===''&&logged&&!confirm?<Bet error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} bet={bet} setBet={setBet} handleClick={handleClick}></Bet>:null}
                     {confirm?<Confirm wagerAmount={wagerAmount} bet={bet} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
+                    {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This should be a link to /result instead */}
                     {/* {result!==''&&logged?<Flipped outcome={outcome} bet={bet} tails={tails} result={result}/>:null} */}
                     {/* Render a win or lose component if result */}
