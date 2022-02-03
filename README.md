@@ -28,7 +28,9 @@ POST BACKEND MVP:
 8. Tracking stats to know if they are desktop or mobile
 
 QUESTIONS:
-1. Instead of handling the transition from game -> confirm on frontend, should this be backend? (create your game, then delete it if they go back?)
+*** Security risk for CSRF token (rails additional security beyond CORS)
+   cookies["CSRF-TOKEN"] -- did you introduce a security vulnerability here? can it be fixed w/ web3js
+1. Chose to create your game, then delete it if they go back? from confirm screen - alternatively this could be handled on frontend. - is either of these diff
 2. For the play again button (should it natively have the bet features again on the page? -- depends on how to "claim" works.)
 3. Track the bet in state too (both the bet and selection should be sent to backend on initial flip)
 4. Security issues, what do we need to move to backend server?

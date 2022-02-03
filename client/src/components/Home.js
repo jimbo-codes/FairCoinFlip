@@ -6,11 +6,10 @@ import Confirm from './Confirm'
 import Navigation from './Navigation'
 import coinF from '../images/CoinFront.png';
 import coinB from '../images/CoinBack.png';
-
 // import Flipped from './Flipped';
 
 
-function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+function Home({call, wallet, setWallet, setCall, setResult, setOutcome, result, auth, setAuth, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
@@ -18,8 +17,26 @@ function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wa
 
     function handleClick(){
     // call, wagerAmount
-    if(!!call && !!wagerAmount){
-        setError('')
+    if(!!call && !!wagerAmount){    
+        
+        fetch('/games',{
+            method:'POST',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+           wagerAmount: wagerAmount,
+           call: call
+            })           
+       })
+       .then(data=> {console.log(data)})
+       .catch(error=> {console.log(error)})
+       
+       // REMEMBER TO FIRE A DELETE FOR THE GAME IF THEY GO BACK.
+        
+        
+            setError('')
         setConfirm(true)
     }else if(!!call){
         setError('You must select a wager.')
@@ -28,46 +45,64 @@ function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wa
     }else{
         setError('You must select either heads or tails, and a wager.')
     }
-    // have this send you to a CONFIRMATION screen
-    // make sure that a wager and call are both selected - display an error message if not.
-    // ERROR HANDLING IF A BET and a wager isn't made.
-
-    // console.log("Wager: "+wagerAmount)
-    // Math based on what was call here (again this should end up on backend.)
-    // SEND THE BET TO API - this entire operation should happen on backend.
-    // send the selection of wager too.
-    
-    // The animation should occur, and the result should be displayed ABOVE the "it's gonna be"
-
-    // fetch('/test')
-    // .then(res=>res.json())
-    // .then(console.log('clicked'))
     }
 
+    function handleLogin(){
+        // Assume that you've identified who they are on the frontend at this point
+        // Setstate for a wallet
+    // This is going to show existing user for this wallet (create if they don't have)
+
+        // This acts as a "login" where you send the user information (after getting it)
+        fetch(`/me/${wallet}`)
+        .then((r) => {console.log(r);r.json();})
+        .then(data=>console.log(data))
+        
+        
+        fetch(`/me/${wallet}`,{
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+              wallet: wallet
+          })
+        })
+        .then((r) => {console.log(r);r.json();})
+        .then(data=>console.log(data))
+            //     if (response.ok) {
+            //       response.json().then((user) => {setUser(user);console.log(user);setAuth(true)});
+            //     }
+            //   });
+        // setAuth(true)
+    }
     
 
     function handleGamble(){
-
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
+            // Here go to backend results (and create the random seed)
+
+
+        // A crazy basic frontend solution:
         let answer = Math.random();
         setSpin(true)
         setConfirm(false);
-    // Pretty sure this shouldn't be greater than or equal to here -- confirm the math.
-    if(answer<=0.5){
-        setResult('Heads');
-        if(call===1){
-            setOutcome(true)
+        // Pretty sure this shouldn't be greater than or equal to here -- confirm the math.
+        if(answer<=0.5){
+            setResult('Heads');
+            if(call===1){
+                setOutcome(true)
+            }else{
+                setOutcome(false)
+            }
         }else{
-            setOutcome(false)
+            setResult('Tails')
+            if(call===2){
+                setOutcome(true)
+            }else{
+                setOutcome(false)
+            }
         }
-    }else{
-        setResult('Tails')
-        if(call===2){
-            setOutcome(true)
-        }else{
-            setOutcome(false)
-        }
-    }
         // Make that coin spin beyotch
         coin.style.animation = "none";
         if(answer<=0.5){
@@ -94,9 +129,9 @@ function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wa
         <Navigation/>
         <div>
             <h1 className="font-header text-center mt-6 mb-2 text-6xl">Double or nothing.</h1>
-            {logged?null:<h3 className="font-header text-center mt-2 mb-2 text-xl">With the lowest fees of any coin flip game.</h3>}
-            {/* Adds line if not logged in */}
-            {logged?null:<h3 className="font-header text-center mt-2 mb-2 text-xl"style={{ fontSize: 'medium' }}>(and no network outages, sorry Solana).</h3>}
+            {auth?null:<h3 className="font-header text-center mt-2 mb-2 text-xl">With the lowest fees of any coin flip game.</h3>}
+            {/* Adds line if not auth in */}
+            {auth?null:<h3 className="font-header text-center mt-2 mb-2 text-xl"style={{ fontSize: 'medium' }}>(and no network outages, sorry Solana).</h3>}
             <h3 className="font-header text-center mt-2 mb-2 text-xl">
                 <div className="flex justify-center">
                     <Socials/>
@@ -128,15 +163,15 @@ function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wa
 </div> */}
 
                     {/* Render the betting if result is empty. */}
-                    {result===''&&logged&&!confirm?<Game error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
+                    {result===''&&auth&&!confirm?<Game error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
                     {confirm?<Confirm wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This should be a link to /result instead */}
-                    {/* {result!==''&&logged?<Flipped outcome={outcome} call={call} tails={tails} result={result}/>:null} */}
+                    {/* {result!==''&&auth?<Flipped outcome={outcome} call={call} tails={tails} result={result}/>:null} */}
                     {/* Render a win or lose component if result */}
 
                     {/* This button goes away once you've connected. */}
-                    {logged?null:<button className="mt-8 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
+                    {auth?null:<button onClick={handleLogin} className="mt-8 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
                     {/*  You MAY NEED A SECOND ONE OF THESE to "Play double or nothing" and sign a one time nonce like DCF */}
                 </div>
         </div>

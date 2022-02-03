@@ -4,7 +4,7 @@ function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
 
     // Whichever one of these is "true" is the call.
     // on your final button press send the true one
-
+    
     function betClick(e){
         if(e.target.textContent === 'Heads'){
             setCall(1);

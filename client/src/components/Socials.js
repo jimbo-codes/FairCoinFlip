@@ -1,4 +1,4 @@
-function Socials({logged}){
+function Socials({}){
 return(
          <>
                     {/* SET YOUR TWITTER LINK */}
