@@ -5,12 +5,12 @@ import Navigation from "./Navigation";
 
 // You should route to this page once they have signed the approval transaction, they take the $ out of your wallet AT THIS STAGE
 
-function Flipped({result, outcome, wagerAmount, setWagerAmount, bet, setBet, setResult, setOutcome, setConfirm}){
+function Result({result, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
     function playAgain(){
     setResult('');
     setOutcome('');
     setWagerAmount(0);
-    setBet(false);
+    setCall(false);
     setConfirm(false);
 
     // Any required actions (post to send ETH, etc.)
@@ -56,4 +56,4 @@ function Flipped({result, outcome, wagerAmount, setWagerAmount, bet, setBet, set
     // Put the amount of the bet here, how much you win / lose (red / green)
 );
 
-}export default Flipped
+}export default Result

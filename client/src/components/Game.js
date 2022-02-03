@@ -1,19 +1,19 @@
 import React from "react";
 
-function Bet({handleClick, wagerAmount, setWagerAmount, bet, setBet, error}){
+function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
 
-    // Whichever one of these is "true" is the bet.
+    // Whichever one of these is "true" is the call.
     // on your final button press send the true one
 
     function betClick(e){
         if(e.target.textContent === 'Heads'){
-            setBet(1);
+            setCall(1);
         }else if(e.target.textContent ==='Tails'){
-            setBet(2);
+            setCall(2);
         }
-        // setBet
+        // setCall
         // you can condense this "heads and tails" click into a 0/1 like you did below. Could also be bool.
-        // have a "set bet" single state, 0 = heads, 1 = tails.
+        // have a "set call" single state, 0 = heads, 1 = tails.
     }
 
     function handleBet(e){
@@ -45,11 +45,11 @@ function Bet({handleClick, wagerAmount, setWagerAmount, bet, setBet, error}){
         <>
         <h3 className='font-header text-center mt-2 mb-2 text-2xl'>It's gonna be:</h3>
         <div className="grid grid-cols-3 gap-6">
-            {/* have onclick's for sending what is bet */}
+            {/* have onclick's for sending what is call */}
             {/* I like the way this looks once its already been selected. */}
             {/* How to set it so the focus STAYS */}
-            {bet===1?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-yellow-600">Heads</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Heads</button>}
-            {bet===2?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-500">Tails</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Tails</button>}
+            {call===1?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-yellow-600">Heads</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Heads</button>}
+            {call===2?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-500">Tails</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Tails</button>}
     
     <h3 className='font-header col-span-3 text-center mb-2 text-2xl'>And I'm risking:</h3>
     
@@ -65,6 +65,6 @@ function Bet({handleClick, wagerAmount, setWagerAmount, bet, setBet, error}){
     <button onClick={handleClick} className=" mt-0 px-16 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-pink-500 focus:bg-pink-700 focus:outline-none">Fire it up</button>
     </>
     )
-}export default Bet
+}export default Game
 
 

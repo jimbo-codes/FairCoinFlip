@@ -12,20 +12,23 @@ For now, the only focus is on building out frontend MVP functionality (with a mo
 
 NEXT STEPS:
 7. backend
+   - fix your naming conventions: Bet ==> call, flip ==> Game (match models)
 8. Account, leaderboard
 9. steps for deployment on real website?
 
 
 POST BACKEND MVP:
-1. SETUP FUNDS TRACKER (do this in your database (?) replace w/ wallet eventually)
+*** FIGURE OUT THIS WEBSOCKET ISSUE -- making a get /ws call - where is this coming from, and do we want / need it?
+1. SETUP FUNDS TRACKER (do this in your database (?) will replace w/ wallet eventually)
 5. Top Navbar links (leaderboard and backend stuff, but also INDIVIDUAL PLAYER INFO)
 1. Get an empty coin graphic (a missing coin) to display when you lose.
 5. Small links at bottom (faq, etc)
 6. Popup to gamble responsibly (and in right location)
-7. ADD BREAKPOINTS FOR non-mobile users
+7. ADD BREAKPOINTS FOR non-mobile users, screen size optimization
 8. Tracking stats to know if they are desktop or mobile
 
 QUESTIONS:
+1. Instead of handling the transition from game -> confirm on frontend, should this be backend? (create your game, then delete it if they go back?)
 2. For the play again button (should it natively have the bet features again on the page? -- depends on how to "claim" works.)
 3. Track the bet in state too (both the bet and selection should be sent to backend on initial flip)
 4. Security issues, what do we need to move to backend server?

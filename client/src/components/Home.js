@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
-import Bet from './Bet';
+import Game from './Game';
 import Socials from './Socials'
 import Confirm from './Confirm'
 import Navigation from './Navigation'
@@ -10,18 +10,18 @@ import coinB from '../images/CoinBack.png';
 // import Flipped from './Flipped';
 
 
-function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+function Home({call, setCall, setResult, setOutcome, result, logged, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
     let coin = document.querySelector(".coin");
 
     function handleClick(){
-    // bet, wagerAmount
-    if(!!bet && !!wagerAmount){
+    // call, wagerAmount
+    if(!!call && !!wagerAmount){
         setError('')
         setConfirm(true)
-    }else if(!!bet){
+    }else if(!!call){
         setError('You must select a wager.')
     }else if(!!wagerAmount){
         setError('You must select either heads or tails.')
@@ -29,11 +29,11 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
         setError('You must select either heads or tails, and a wager.')
     }
     // have this send you to a CONFIRMATION screen
-    // make sure that a wager and bet are both selected - display an error message if not.
+    // make sure that a wager and call are both selected - display an error message if not.
     // ERROR HANDLING IF A BET and a wager isn't made.
 
     // console.log("Wager: "+wagerAmount)
-    // Math based on what was bet here (again this should end up on backend.)
+    // Math based on what was call here (again this should end up on backend.)
     // SEND THE BET TO API - this entire operation should happen on backend.
     // send the selection of wager too.
     
@@ -55,14 +55,14 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
     // Pretty sure this shouldn't be greater than or equal to here -- confirm the math.
     if(answer<=0.5){
         setResult('Heads');
-        if(bet===1){
+        if(call===1){
             setOutcome(true)
         }else{
             setOutcome(false)
         }
     }else{
         setResult('Tails')
-        if(bet===2){
+        if(call===2){
             setOutcome(true)
         }else{
             setOutcome(false)
@@ -128,11 +128,11 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
 </div> */}
 
                     {/* Render the betting if result is empty. */}
-                    {result===''&&logged&&!confirm?<Bet error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} bet={bet} setBet={setBet} handleClick={handleClick}></Bet>:null}
-                    {confirm?<Confirm wagerAmount={wagerAmount} bet={bet} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
+                    {result===''&&logged&&!confirm?<Game error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
+                    {confirm?<Confirm wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This should be a link to /result instead */}
-                    {/* {result!==''&&logged?<Flipped outcome={outcome} bet={bet} tails={tails} result={result}/>:null} */}
+                    {/* {result!==''&&logged?<Flipped outcome={outcome} call={call} tails={tails} result={result}/>:null} */}
                     {/* Render a win or lose component if result */}
 
                     {/* This button goes away once you've connected. */}
