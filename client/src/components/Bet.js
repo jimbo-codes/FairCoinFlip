@@ -37,6 +37,8 @@ function Bet({handleClick, wagerAmount, setWagerAmount, bet, setBet, error}){
             case '.25 ETH':
                 setWagerAmount(0.25);
             break;
+            default:
+                console.log("This should never occur")
         }
     }
     return(

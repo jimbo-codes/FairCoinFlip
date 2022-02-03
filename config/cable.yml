@@ -1,10 +1,22 @@
 development:
-  adapter: async
+  adapter: postgresql
 
 test:
-  adapter: test
+  adapter: postgresql
 
 production:
-  adapter: redis
+  adapter: postgresql
   url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
   channel_prefix: FairCoinFlip_production
+
+
+# development:
+#   adapter: async
+
+# test:
+#   adapter: test
+
+# production:
+#   adapter: redis
+#   url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+#   channel_prefix: FairCoinFlip_production

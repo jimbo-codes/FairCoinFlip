@@ -21,7 +21,11 @@ function Home({bet, setBet, setResult, setOutcome, result, logged, outcome, wage
     if(!!bet && !!wagerAmount){
         setError('')
         setConfirm(true)
-    }else {
+    }else if(!!bet){
+        setError('You must select a wager.')
+    }else if(!!wagerAmount){
+        setError('You must select either heads or tails.')
+    }else{
         setError('You must select either heads or tails, and a wager.')
     }
     // have this send you to a CONFIRMATION screen
