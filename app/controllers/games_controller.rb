@@ -14,17 +14,24 @@ class GamesController < ApplicationController
 
   # POST /games or /games.json
   def create
-    @game = Game.new(game_params)
+    # Before creating, ensure you have a valid web3 login.
+    
+    # Find your user and get userid first
+    # Setup wristbanding for "connect wallet" assuming your auth as user #1 for now.
+    @game = Game.create(game_params)
+    # debugger
+    render json: @game
 
-    respond_to do |format|
-      if @game.save
-        format.html { redirect_to game_url(@game), notice: "Game was successfully created." }
-        format.json { render :show, status: :created, location: @game }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
-    end
+    
+    # respond_to do |format|
+    #   if @game.save
+    #     format.html { redirect_to game_url(@game), notice: "Game was successfully created." }
+    #     format.json { render :show, status: :created, location: @game }
+    #   else
+    #     format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @game.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /games/1 or /games/1.json
@@ -41,7 +48,6 @@ class GamesController < ApplicationController
   end
 
   
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
@@ -51,7 +57,7 @@ class GamesController < ApplicationController
     # Filter your parameters here (params.require().permit?)
     # Only allow a list of trusted parameters through.
     def game_params
-      params.fetch(:game, {})
+      params.require(:game).permit(:wagerAmount, :call)
     end
 
 # UNUSED:
