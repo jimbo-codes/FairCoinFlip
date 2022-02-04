@@ -11,14 +11,16 @@ For now, the only focus is on building out frontend MVP functionality (with a mo
 
 
 NEXT STEPS:
-7. backend
-   - fix your naming conventions: Bet ==> call, flip ==> Game (match models)
+FIX THE CREATION + deletion --- Have it ONLY create the game once you've confirmed the thing.
+- this will mess up your create for results, figure that out.
+---- Update the user once each game happens to debit or credit acct appropriately (and update stats where apt)
+ --- create methods for summary statistics for the games that have been played
+     ---- and for individuals
 8. Account, leaderboard
 9. steps for deployment on real website?
 
 
 POST BACKEND MVP:
-*** FIGURE OUT THIS WEBSOCKET ISSUE -- making a get /ws call - where is this coming from, and do we want / need it?
 1. SETUP FUNDS TRACKER (do this in your database (?) will replace w/ wallet eventually)
 5. Top Navbar links (leaderboard and backend stuff, but also INDIVIDUAL PLAYER INFO)
 1. Get an empty coin graphic (a missing coin) to display when you lose.

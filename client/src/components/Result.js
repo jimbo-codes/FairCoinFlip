@@ -1,21 +1,43 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from 'react-router-dom';
 import Socials from './Socials'
 import Navigation from "./Navigation";
 
 // You should route to this page once they have signed the approval transaction, they take the $ out of your wallet AT THIS STAGE
 
-function Result({result, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
+function Result({result, game, setGame, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
     function playAgain(){
     setResult('');
     setOutcome('');
     setWagerAmount(0);
     setCall(false);
     setConfirm(false);
+    setGame({})
 
     // Any required actions (post to send ETH, etc.)
-
 }
+
+// HOW DO YOU PASS GAMEID Securely here??? - this should probably all be backend w/ sessions (?)
+// This is for sure not secure.
+let resultObj = {...game, 
+    result:result, 
+    outcome:outcome}
+
+useEffect(() => { 
+    fetch('/results',{
+        method:'POST',
+        headers: {
+         'Accept': 'application/json',
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify(resultObj)
+    })
+    .then(r=>r.json())
+    .then(data=> console.log(data))
+    // Idt you need to do anything w/ this data coming back.
+    .catch(error=> {console.log(error)})
+    },[])
+
     return(
     // Have outcome say "You win $xxxx ETH! (in green)"
     

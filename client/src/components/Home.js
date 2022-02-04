@@ -9,76 +9,59 @@ import coinB from '../images/CoinBack.png';
 // import Flipped from './Flipped';
 
 
-function Home({call, wallet, setWallet, setCall, setResult, setOutcome, result, auth, setAuth, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+function Home({call, wallet, setWallet, game, setGame, user, setUser, setCall, setResult, setOutcome, result, auth, setAuth, outcome, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
     let coin = document.querySelector(".coin");
 
-    function handleClick(){
-    // call, wagerAmount
-    if(!!call && !!wagerAmount){    
-        
-        fetch('/games',{
-            method:'POST',
-            headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify({
-           wagerAmount: wagerAmount,
-           call: call
-            })           
-       })
-       .then(data=> {console.log(data)})
-       .catch(error=> {console.log(error)})
-       
-       // REMEMBER TO FIRE A DELETE FOR THE GAME IF THEY GO BACK.
-        
-        
-            setError('')
-        setConfirm(true)
-    }else if(!!call){
-        setError('You must select a wager.')
-    }else if(!!wagerAmount){
-        setError('You must select either heads or tails.')
-    }else{
-        setError('You must select either heads or tails, and a wager.')
-    }
-    }
-
     function handleLogin(){
         // Assume that you've identified who they are on the frontend at this point
         // Setstate for a wallet
-    // This is going to show existing user for this wallet (create if they don't have)
+
+        // This is going to show existing user for this wallet (create if they don't have)
 
         // This acts as a "login" where you send the user information (after getting it)
         
-        
-        setAuth(true)
-        
-        // TEMP COMMENTING ALL OUT BC OF ISSUES
-        // fetch(`/me/${wallet}`)
-        // .then((r) => {console.log(r);r.json();})
-        // .then(data=>console.log(data))
-        
-        
-        fetch(`/me/${wallet}`,{
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-              wallet: wallet
-          })
-        })
+        // This returns the USER, assumes you've logged them in and already gotten wallet
+        fetch(`/me/${wallet}`)
         .then((r) => {return r.json();})
-        .then(data=>console.log(data))
-                
-        // setAuth(true)
+        .then(data=>{ setAuth(true); setUser(data); console.log(data)})
     }
+
+    function handleClick(){
+        // call, wagerAmount
+        if(!!call && !!wagerAmount){    
+            // REMEMBER TO DELETE IF THEY GO BACK !!!!
+            fetch('/games',{
+                method:'POST',
+                headers: {
+                 'Accept': 'application/json',
+                 'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({
+               user_id: user.id,
+               wagerAmount: wagerAmount,
+               call: call
+                })           
+           })
+           .then(r=>r.json())
+           .then(data=> {console.log(data);setGame(data)})
+           .catch(error=> {console.log(error)})
+           
+           // REMEMBER TO FIRE A DELETE FOR THE GAME IF THEY GO BACK.
+            
     
+                setError('')
+            setConfirm(true)
+        }else if(!!call){
+            setError('You must select a wager.')
+        }else if(!!wagerAmount){
+            setError('You must select either heads or tails.')
+        }else{
+            setError('You must select either heads or tails, and a wager.')
+        }
+        }
 
     function handleGamble(){
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
@@ -116,13 +99,10 @@ function Home({call, wallet, setWallet, setCall, setResult, setOutcome, result, 
             setTimeout(function(){
                 coin.style.animation = "spin-tails 3s forwards";
             }, 100);
-        }   
+        }
+        // setGame({...outcome,result})
         // Timeout after the coin spins to send you to results
         setTimeout(()=>{navigate('/result')}, 3000);
-
-    console.log("Random Seed: " +answer);
-    console.log("Wager: "+wagerAmount)
-    
     }
 
     // Have a popup disclaimer once wallet is connected "saying I certify / agree that this is not illegal where I am, etc."
@@ -165,8 +145,8 @@ function Home({call, wallet, setWallet, setCall, setResult, setOutcome, result, 
 </div> */}
 
                     {/* Render the betting if result is empty. */}
-                    {result===''&&auth&&!confirm?<Game error={error} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
-                    {confirm?<Confirm wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
+                    {result===''&&auth&&!confirm?<Game error={error} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
+                    {confirm?<Confirm game={game} setGame={setGame} ßwagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This should be a link to /result instead */}
                     {/* {result!==''&&auth?<Flipped outcome={outcome} call={call} tails={tails} result={result}/>:null} */}

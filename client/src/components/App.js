@@ -22,7 +22,8 @@ function App() {
 
   const [auth, setAuth] = useState(false);
   const [wallet, setWallet] = useState('');
-
+  const [user, setUser] = useState({});
+  const [game, setGame] = useState({});
   // Temporary setting for getting wallet squared.
   // For now (testing) this is set to true, but it should be set to false by default (obviously)
   const [outcome, setOutcome] = useState('');
@@ -65,9 +66,13 @@ function App() {
     <div> 
       {/* Setup router (home, result) */}
       <Routes>
-        <Route path='result/' element={<Result outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
+        <Route path='result/' element={<Result user={user} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
 
         <Route path='/' element={<Home 
+        game={game}
+        setGame={setGame}
+        user={user}
+        setUser={setUser}
         setAuth={setAuth}
         wallet={wallet}
         setWallet={setWallet}

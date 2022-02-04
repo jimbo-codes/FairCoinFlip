@@ -19,22 +19,11 @@ class GamesController < ApplicationController
     # Find your user and get userid first
     # Setup wristbanding for "connect wallet" assuming your auth as user #1 for now.
     @game = Game.create(game_params)
-    # debugger
     render json: @game
-
-    
-    # respond_to do |format|
-    #   if @game.save
-    #     format.html { redirect_to game_url(@game), notice: "Game was successfully created." }
-    #     format.json { render :show, status: :created, location: @game }
-    #   else
-    #     format.html { render :new, status: :unprocessable_entity }
-    #     format.json { render json: @game.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
 
   # PATCH/PUT /games/1 or /games/1.json
+  # You shouldn't need this ?
   def update
     respond_to do |format|
       if @game.update(game_params)
@@ -47,7 +36,12 @@ class GamesController < ApplicationController
     end
   end
 
-  
+  # DELETE /games/1
+  def destroy
+    # debugger
+    @game.destroy
+    render json: {}, status: 204
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
@@ -57,20 +51,12 @@ class GamesController < ApplicationController
     # Filter your parameters here (params.require().permit?)
     # Only allow a list of trusted parameters through.
     def game_params
-      params.require(:game).permit(:wagerAmount, :call)
+      params.require(:game).permit(:wagerAmount, :call, :user_id)
     end
 
 # UNUSED:
 ################
-  # DELETE /games/1 or /games/1.json
-  # def destroy
-  #   @game.destroy
-
-  #   respond_to do |format|
-  #     format.html { redirect_to games_url, notice: "Game was successfully destroyed." }
-  #     format.json { head :no_content }
-  #   end
-  # end
+  
   #   # GET /games/new
   #   def new
   #     @game = Game.new

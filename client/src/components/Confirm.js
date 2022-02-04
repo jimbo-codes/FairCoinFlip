@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import coinFront from '../images/CoinFront.png';
 import coinBack from '../images/CoinBack.png';
 
-function Confirm({wagerAmount, bet, setConfirm, handleGamble}){
+function Confirm({wagerAmount, game, setGame, bet, setConfirm, handleGamble}){
     let headsName;
     if(bet===1){
         headsName = 'Heads'
@@ -21,7 +21,19 @@ function Confirm({wagerAmount, bet, setConfirm, handleGamble}){
         // bet (0=heads, 1=tails)
     }
     function goBack(){
-        setConfirm(false)
+        fetch(`/games/${game.id}`,{
+            method:'DELETE',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json'
+           },
+           
+        })
+        .then(r=>r.json())
+        .then(()=>setGame({}))
+        .catch(error=> {console.log(error)})
+       
+    setConfirm(false)
     }
 
 // let resetBtn = document.querySelector("#reset-button");
