@@ -1,12 +1,9 @@
 import Home from './Home'
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import React,{useState,useEffect} from "react";
 import Result from './Result';
-
-// Have a "wristbanding get" that runs here to see if they are connected.
-
-
-// Set the heads or tails 
+import Navigation from './Navigation'
+import User from './User'
 
 function App() {
 
@@ -18,7 +15,6 @@ function App() {
   //     }
   //   });
   // }, []);
-
 
   const [auth, setAuth] = useState(false);
   const [wallet, setWallet] = useState('');
@@ -44,31 +40,27 @@ function App() {
 
   useEffect(() => {
   setWallet('jimString');
-
+    // this isn't really needed. Replace this w/ wristbanding
     fetch('/users')
-                  // for some reason you NEEDED to return this here
-    .then(response=>{return response.json()})
-    // Here you should have a "checker" to see time vs. last update, if the curr time is >
-    // Then run a patch to update the Price, volume and supply
+    .then(r=>r.json())
     .then(data=> {console.log(data)})
     .catch(error=> {console.log(error)})
   },[])
 
-  // ',{
-  //   method:'POST',
-  //   headers: {
-  //    'Accept': 'application/json',
-  //    'Content-Type': 'application/json',
-  //    'xsrf-token': csrfToken
-  //  },
-
   return (
     <div> 
-      {/* Setup router (home, result) */}
+      <div className='top-0'>
+        <Navigation />      
+        {/* This lower div does nothin' since not sticky */}
+          <div className='z-50'>
+          </div>
+      </div>
+
       <Routes>
-        <Route path='result/' element={<Result user={user} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
+        <Route path='result/' element={<Result user={user} setUser={setUser} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
 
         <Route path='/' element={<Home 
+        user={user}
         game={game}
         setGame={setGame}
         user={user}

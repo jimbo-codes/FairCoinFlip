@@ -1,48 +1,27 @@
-import { Link } from 'react-router-dom';
-import coinFront from '../images/CoinFront.png';
-import coinBack from '../images/CoinBack.png';
-
-function Confirm({wagerAmount, game, setGame, bet, setConfirm, handleGamble}){
+function Confirm({wagerAmount, call, setConfirm, handleGamble}){
     let headsName;
-    if(bet===1){
-        headsName = 'Heads'
-    } else if(bet===2){
+    if(!!call){
         headsName = 'Tails'
-    }
-
-    function handleClick(){
-        // let gambleBtn = document.getElementById("gamble");
-        // This asych function should not fire until 
-            
-            // in the settimeout see what happens if you run something to print your result
-        // you're using handle gamble instead, but the below holds.
-        // Sent the information from state for bet and the Wager to backend
-        // wagerAmount
-        // bet (0=heads, 1=tails)
+    }else if(call !== null){
+        headsName = 'Heads'
     }
     function goBack(){
-        fetch(`/games/${game.id}`,{
-            method:'DELETE',
-            headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json'
-           },
-           
-        })
-        .then(r=>r.json())
-        .then(()=>setGame({}))
-        .catch(error=> {console.log(error)})
-       
     setConfirm(false)
+            // fetch(`/games/${game.id}`,{
+        //     method:'DELETE',
+        //     headers: {
+        //      'Accept': 'application/json',
+        //      'Content-Type': 'application/json'
+        //    },
+           
+        // })
+        // .then(r=>r.json())
+        // .then(()=>setGame({}))
+        // .catch(error=> {console.log(error)})
+       
     }
-
-// let resetBtn = document.querySelector("#reset-button");
-
-
-// It is trying to do this before the gamble btn renders
-
     return(
-        // Put a dollar conversion in this message
+        // Put a dollar conversion in this message - get ETH snapshot data
         <>
         <h3 className='font-header text-center mt-2 mb-4 text-2xl'>You're about to bet <b><u>{wagerAmount} ETH</u></b>  on <b><u>{headsName}</u></b></h3>
         <div className="grid">

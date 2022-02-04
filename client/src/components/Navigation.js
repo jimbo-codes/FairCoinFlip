@@ -1,5 +1,4 @@
-function Navigation({}){
-
+function Navigation(){
     // Make this a nav disclosure (?)
     return(
         <div className="flex justify-center flex-sm-column h-10 justify-content-start items-center align-items-center">

@@ -15,6 +15,8 @@ class GamesController < ApplicationController
   # POST /games or /games.json
   def create
     # Before creating, ensure you have a valid web3 login.
+
+    # IF THERE IS A GAP between the ID it is creating, and the ID that is last, you should fix.
     
     # Find your user and get userid first
     # Setup wristbanding for "connect wallet" assuming your auth as user #1 for now.
@@ -38,7 +40,6 @@ class GamesController < ApplicationController
 
   # DELETE /games/1
   def destroy
-    # debugger
     @game.destroy
     render json: {}, status: 204
   end

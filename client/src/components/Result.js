@@ -5,12 +5,12 @@ import Navigation from "./Navigation";
 
 // You should route to this page once they have signed the approval transaction, they take the $ out of your wallet AT THIS STAGE
 
-function Result({result, game, setGame, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
+function Result({result, user, setUser, game, setGame, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
     function playAgain(){
     setResult('');
     setOutcome('');
     setWagerAmount(0);
-    setCall(false);
+    setCall();
     setConfirm(false);
     setGame({})
 
@@ -33,10 +33,30 @@ useEffect(() => {
        body: JSON.stringify(resultObj)
     })
     .then(r=>r.json())
-    .then(data=> console.log(data))
+    .then(()=> {
+        // Do you want this to occur here? would having it happen on backend in the single above route be better?
+        return fetch(`/users/${user.id}`,{
+            method:'PATCH',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(resultObj)
+        })
+        .then(r=>r.json())
+        .then(data=> setUser(data))
+    })
     // Idt you need to do anything w/ this data coming back.
+    // Need this kind of syntax to do the double fetch
+    // .then(e=>{
+    // return fetch(`https://api.coingecko.com/api/v3/coins/${e.coin_id}`)
+// })
+// TEMP STOPPING THIS TO TEST THE PATCH ALONE.
+    // You are updating the user object to reflect the new balance. May not be necessary w/ web3 JS
+    // .then(
+    // )
     .catch(error=> {console.log(error)})
-    },[])
+    },[game])
 
     return(
     // Have outcome say "You win $xxxx ETH! (in green)"
@@ -44,7 +64,6 @@ useEffect(() => {
     // Style one of these two things differently?
     // Have it delay the display until the animation is done (?)
     <>
-    <Navigation/>
         <h1 className="font-header text-center mt-6 mb-2 text-6xl">{outcome?"Double!":"Nothing."}</h1>
            
             <h3 className="font-header text-center mt-2 mb-2 text-xl">

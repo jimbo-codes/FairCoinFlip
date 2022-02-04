@@ -1,4 +1,4 @@
-function Socials({}){
+function Socials(){
 return(
          <>
                     {/* SET YOUR TWITTER LINK */}

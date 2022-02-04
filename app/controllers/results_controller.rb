@@ -17,6 +17,12 @@ class ResultsController < ApplicationController
             flipResult = false
         end
         win = params[:outcome]
+        user = User.find_by_id(params[:user_id])
+        if win
+            user[:winStreak] += 1
+        else user[:winStreak] = 0
+        end
+        user.save
             @result = Result.create(wagerResult: wagerResult, flipResult: flipResult, win: win, game_id: params[:id])
         render json: @result, status: 201
     end

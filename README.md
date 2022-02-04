@@ -9,10 +9,11 @@ It is intended to setup a Postgresql database (confirm) to track user stats and 
 For now, the only focus is on building out frontend MVP functionality (with a mobile first build in)
 
 
+Known issues:
+Going back and forward causes failed requests + UI bugs.
+
 
 NEXT STEPS:
-FIX THE CREATION + deletion --- Have it ONLY create the game once you've confirmed the thing.
-- this will mess up your create for results, figure that out.
 ---- Update the user once each game happens to debit or credit acct appropriately (and update stats where apt)
  --- create methods for summary statistics for the games that have been played
      ---- and for individuals
@@ -27,7 +28,8 @@ POST BACKEND MVP:
 5. Small links at bottom (faq, etc)
 6. Popup to gamble responsibly (and in right location)
 7. ADD BREAKPOINTS FOR non-mobile users, screen size optimization
-8. Tracking stats to know if they are desktop or mobile
+8. Your desktop should have more User info (more real estate)
+9. Tracking stats to know if they are desktop or mobile
 
 QUESTIONS:
 *** Security risk for CSRF token (rails additional security beyond CORS)

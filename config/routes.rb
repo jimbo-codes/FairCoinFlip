@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :results
   resources :games
-  resources :users, only: [:index]
+  resources :users, only: [:index, :update, :show]
 
   #sessions/ login routes
   # post "/me/:wallet", to: "users#show"
