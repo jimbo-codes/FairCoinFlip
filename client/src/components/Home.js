@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Game from './Game';
 import Socials from './Socials'
 import Confirm from './Confirm'
@@ -134,7 +134,41 @@ function Home({call, wallet, game, setGame, user, setUser, setCall, setResult, s
                     {confirm?<Confirm game={game} setGame={setGame} wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This button goes away once you've connected. */}
-                    {auth?null:<button onClick={handleLogin} className="mt-8 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
+                    {auth?null:<button onClick={handleLogin} className="mt-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
+                    {auth?null:<>
+                    
+                    
+                    <table className="shadow-lg bg-white min-w-1/2 mt-2 divide-y-2 divide-gray-200" id="market-table">
+                        {/* This TR sets the grey seperator in your table - need a side border */}
+                        <thead>
+                            <tr>
+                            <th></th>
+                            </tr>
+                        </thead>
+                    <tbody className="shadow-lg bg-white min-w-1/2 mt-2 divide-y-2 divide-gray-200">
+                    {/* <tr className="hover:bg-white"> */}
+                    {/* Here is where you map */}
+                    <tr className="px-1 py-4 whitespace-nowrap text-l font-header divide-y-2 divide-gray-200 text-gray-900">
+                    <td className="px-1 py-4 whitespace-nowrap divide-y-2 divide-gray-200 text-gray-900">sumtingignigreallyreallreally long umtingignigreallyreallreally long</td>
+                    </tr>
+                            {/* Just use the above. don't need below, but thats an example of what'll happen when you map. */}
+
+
+                    <tr className="px-1 py-4 whitespace-nowrap text-sm font-medium divide-y-2 divide-gray-200 text-gray-900">
+                    <td className="px-1 py-4 whitespace-nowrap text-sm font-medium divide-y-2 divide-gray-200 text-gray-900">WORDS ON LINE2</td>
+                    </tr>
+
+                    </tbody>
+                  </table>
+
+
+      {/* render the full array here (have to add wallet into this array coming back.)
+      Map over the child component */}
+    {/* onClick={()=>{window.scrollTo(0, 0)}} */}
+    {/* </tr> */}
+
+            </>
+                    }
                     {/*  You MAY NEED A SECOND ONE OF THESE to "Play double or nothing" and sign a one time nonce like DCF */}
                 </div>
         </div>

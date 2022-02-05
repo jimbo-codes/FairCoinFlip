@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2022_02_03_174025) do
     t.boolean "call"
     t.float "wagerAmount"
     t.integer "user_id"
+    t.boolean "gameResult"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

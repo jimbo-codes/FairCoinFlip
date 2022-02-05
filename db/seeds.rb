@@ -6,11 +6,11 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-puts('seeding user')
-User.create(wallet: "jimString", balance: 1000.00, winStreak: 0)
-puts('seeding game')
-Game.create(call: "false", wagerAmount: 0.25, user_id: 1)
-puts('seeding result')
-Result.create(wagerResult: 0.5, flipResult: false, win: true, game_id: 1)
+# puts('seeding user')
+User.create(wallet: "jimString", balance: 5.00, winStreak: 0)
+# puts('seeding game')
+# Game.create(call: "false", wagerAmount: 0.25, user_id: 1)
+# puts('seeding result')
+# Result.create(wagerResult: 0.5, flipResult: false, win: true, game_id: 1)
 
 puts 'done seeding, m8'

@@ -40,12 +40,12 @@ function App() {
 
   useEffect(() => {
   setWallet('jimString');
-    // this isn't really needed. Replace this w/ wristbanding
-    fetch('/users')
+  // This will eventually be wristbanding. for now using it to pull in games array.
+    fetch('/games')
     .then(r=>r.json())
     .then(data=> {console.log(data)})
     .catch(error=> {console.log(error)})
-  },[])
+  },[result])
 
   return (
     <div> 

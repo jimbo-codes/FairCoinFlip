@@ -3,6 +3,7 @@ class CreateGames < ActiveRecord::Migration[7.0]
     create_table :games do |t|
       t.boolean :call
       # false = heads, true = tails.
+      t.boolean :gameResult
       t.float :wagerAmount
       t.integer :user_id
       t.timestamps
