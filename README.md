@@ -11,18 +11,22 @@ For now, the only focus is on building out frontend MVP functionality (with a mo
 
 Known issues:
 Going back and forward causes failed requests + UI bugs.
-
+Ensure the user has the funds to bet, subtract their funds once they made the bet. <--- as a part of the game creation process
+ setup params require for all
+ Setup error handling for all
+ Do not let the game play if the responses from fetch are not approved
 
 NEXT STEPS:
----- Update the user once each game happens to debit or credit acct appropriately (and update stats where apt)
+On game creation reduce player $$$.
+**Serialize the return from your "games model fetch" for the recent plays**
+Put together LIST of the stats you want to track
  --- create methods for summary statistics for the games that have been played
-     ---- and for individuals
 8. Account, leaderboard
+9. Replace user_id with sessions (probably after web3js implementation)
 9. steps for deployment on real website?
 
 
 POST BACKEND MVP:
-1. SETUP FUNDS TRACKER (do this in your database (?) will replace w/ wallet eventually)
 5. Top Navbar links (leaderboard and backend stuff, but also INDIVIDUAL PLAYER INFO)
 1. Get an empty coin graphic (a missing coin) to display when you lose.
 5. Small links at bottom (faq, etc)

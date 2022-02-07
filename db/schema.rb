@@ -19,19 +19,21 @@ ActiveRecord::Schema.define(version: 2022_02_03_174025) do
     t.boolean "call"
     t.float "wagerAmount"
     t.integer "user_id"
-    t.boolean "gameResult"
+    t.float "wagerResult"
+    t.boolean "flipResult"
+    t.boolean "userWin"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "results", force: :cascade do |t|
-    t.float "wagerResult"
-    t.boolean "flipResult"
-    t.boolean "win"
-    t.integer "game_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
+  # create_table "results", force: :cascade do |t|
+  #   t.float "wagerResult"
+  #   t.boolean "flipResult"
+  #   t.boolean "win"
+  #   t.integer "game_id"
+  #   t.datetime "created_at", precision: 6, null: false
+  #   t.datetime "updated_at", precision: 6, null: false
+  # end
 
   create_table "users", force: :cascade do |t|
     t.string "wallet"

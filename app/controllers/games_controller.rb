@@ -3,7 +3,12 @@ class GamesController < ApplicationController
 
   # GET /games
   def index
+
     @games = Game.all
+    # You want to send back: User
+    # Send back wallet information
+    # Send back the $$$ won or lost
+    # Send the user winstreak to the game / result model too
     render json: @games
   end
 
@@ -15,27 +20,46 @@ class GamesController < ApplicationController
   # POST /games or /games.json
   def create
     # Before creating, ensure you have a valid web3 login.
-
     # IF THERE IS A GAP between the ID it is creating, and the ID that is last, you should fix.
-    
-    # Find your user and get userid first
     # Setup wristbanding for "connect wallet" assuming your auth as user #1 for now.
+    user= User.find_by_id(params[:user_id])
+    user[:balance] -= params[:wagerAmount]
+    user.save
     @game = Game.create(game_params)
-    render json: @game
+    render json: @game, status: 200
   end
 
-  # PATCH/PUT /games/1 or /games/1.json
-  # You shouldn't need this ?
+  # PATCH /games/1
   def update
-    respond_to do |format|
-      if @game.update(game_params)
-        format.html { redirect_to game_url(@game), notice: "Game was successfully updated." }
-        format.json { render :show, status: :ok, location: @game }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
+    user= User.find_by_id(params[:user_id])
+    game= Game.find_by_id(params[:id])
+    
+    # set flip result and userwin
+    if params[:result] === 'Tails'
+      game[:flipResult] = true
+    elsif params[:result] === 'Heads'
+      game[:flipResult] = false
     end
+    game[:userWin] = params[:outcome]
+
+    # Set game $$$ distrib, and update user balance and winstreak
+    if params[:outcome]
+      game[:wagerResult] = params[:wagerAmount]*2
+      # Only pay user if they win
+      user[:balance] += game[:wagerResult]
+    elsif !params[:outcome]
+      game[:wagerResult] = -params[:wagerAmount]
+    end
+  # Set winstreak
+  if params[:outcome]
+      user[:winStreak] += 1
+  else user[:winStreak] = 0
+  end
+
+  user.save
+  game.save
+
+  render json: game, status: 200
   end
 
   # DELETE /games/1

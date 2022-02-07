@@ -39,13 +39,16 @@ function App() {
   // console.log(token);
 
   useEffect(() => {
+    // Have this wallet set from your metamask portion.
   setWallet('jimString');
+
   // This will eventually be wristbanding. for now using it to pull in games array.
-    fetch('/games')
+  // Use this to pull in the user info, changing each game.
+    fetch(`/me/${wallet}`)
     .then(r=>r.json())
-    .then(data=> {console.log(data)})
+    .then(userData=> {setUser(userData)})
     .catch(error=> {console.log(error)})
-  },[result])
+  },[game])
 
   return (
     <div> 

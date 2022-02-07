@@ -24,8 +24,8 @@ let resultObj = {...game,
     outcome:outcome}
 
 useEffect(() => { 
-    fetch('/results',{
-        method:'POST',
+    fetch(`/games/${resultObj.id}`,{
+        method:'PATCH',
         headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
@@ -33,19 +33,22 @@ useEffect(() => {
        body: JSON.stringify(resultObj)
     })
     .then(r=>r.json())
-    .then(()=> {
-        // Do you want this to occur here? would having it happen on backend in the single above route be better?
-        return fetch(`/users/${user.id}`,{
-            method:'PATCH',
-            headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(resultObj)
-        })
-        .then(r=>r.json())
-        .then(data=> setUser(data))
-    })
+    // Can you just change these things for the User/userid route direct from game?
+    .then(data=>console.log(data))
+        
+    //     ()=> {
+    //     // Do you want this to occur here? would having it happen on backend in the single above route be better?
+    //     return fetch(`/users/${user.id}`,{
+    //         method:'PATCH',
+    //         headers: {
+    //          'Accept': 'application/json',
+    //          'Content-Type': 'application/json',
+    //        },
+    //        body: JSON.stringify(resultObj)
+    //     })
+    //     .then(r=>r.json())
+    //     .then(data=> setUser(data))
+    // })
     // Idt you need to do anything w/ this data coming back.
     // Need this kind of syntax to do the double fetch
     // .then(e=>{
