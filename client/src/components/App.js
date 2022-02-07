@@ -20,6 +20,7 @@ function App() {
   const [wallet, setWallet] = useState('');
   const [user, setUser] = useState({});
   const [game, setGame] = useState({});
+  const [recentGames, setRecentGames] = useState({});
   // Temporary setting for getting wallet squared.
   // For now (testing) this is set to true, but it should be set to false by default (obviously)
   const [outcome, setOutcome] = useState('');
@@ -40,13 +41,13 @@ function App() {
 
   useEffect(() => {
     // Have this wallet set from your metamask portion.
-  setWallet('jimString');
+  setWallet('0xaea01704d80288FA97B0de0bc0758d5D2B0b81E1');
 
   // This will eventually be wristbanding. for now using it to pull in games array.
-  // Use this to pull in the user info, changing each game.
-    fetch(`/me/${wallet}`)
+
+    fetch(`/games`)
     .then(r=>r.json())
-    .then(userData=> {setUser(userData)})
+    .then(games=> {console.log(games);setRecentGames(games)})
     .catch(error=> {console.log(error)})
   },[game])
 
@@ -63,6 +64,7 @@ function App() {
         <Route path='result/' element={<Result user={user} setUser={setUser} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
 
         <Route path='/' element={<Home 
+        recentGames={recentGames}
         user={user}
         game={game}
         setGame={setGame}

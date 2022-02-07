@@ -35,7 +35,10 @@ useEffect(() => {
     .then(r=>r.json())
     // Can you just change these things for the User/userid route direct from game?
     .then(data=>console.log(data))
-        
+
+    // No longer need the below user update, you built this into the game + result route.
+    // Need to make sure your wristbanding for user is done so you keep updating data.
+
     //     ()=> {
     //     // Do you want this to occur here? would having it happen on backend in the single above route be better?
     //     return fetch(`/users/${user.id}`,{
@@ -54,10 +57,6 @@ useEffect(() => {
     // .then(e=>{
     // return fetch(`https://api.coingecko.com/api/v3/coins/${e.coin_id}`)
 // })
-// TEMP STOPPING THIS TO TEST THE PATCH ALONE.
-    // You are updating the user object to reflect the new balance. May not be necessary w/ web3 JS
-    // .then(
-    // )
     .catch(error=> {console.log(error)})
     },[game])
 

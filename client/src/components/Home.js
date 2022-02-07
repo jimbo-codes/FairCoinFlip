@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import Game from './Game';
 import Socials from './Socials'
@@ -6,28 +6,35 @@ import Confirm from './Confirm'
 import Navigation from './Navigation'
 import coinF from '../images/CoinFront.png';
 import coinB from '../images/CoinBack.png';
-import User from './User'
+import User from './User';
+import Plays from './Plays';
 
 
-function Home({call, wallet, game, setGame, user, setUser, setCall, setResult, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+function Home({call, wallet, game, recentGames, setGame, user, setUser, setCall, setResult, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
     let coin = document.querySelector(".coin");
 
     function handleLogin(){
-        // Assume that you've identified who they are on the frontend at this point
-        // will have to add setWallet up above.
+        // This is going to handle the web3 authentication, once that is posted, you'll references vs. our database.
         // This is going to show existing user for this wallet (create if they don't have)
-
         // This acts as a "login" where you send the user information (after getting it)
-        
         // This returns the USER, assumes you've logged them in and already gotten wallet
         fetch(`/me/${wallet}`)
         .then((r) => {return r.json();})
         .then(data=>{ setAuth(true); setUser(data); console.log(data)})
         // After this IF the user doesn't exist, then (post) create a user in our DB
     }
+    // Once logged in, update user stats on gameupdate.
+    useEffect(() => {
+        if(auth){
+            fetch(`/me/${wallet}`)
+            .then(r=>r.json())
+            .then(userData=> {setUser(userData)})
+            .catch(error=> {console.log(error)})    
+        }
+        },[game])
 
     function handleClick(){
         if(call !==null && !!wagerAmount){    
@@ -58,14 +65,15 @@ function Home({call, wallet, game, setGame, user, setUser, setCall, setResult, s
                 })           
            })
            .then(r=>r.json())
-           .then(data=> {console.log(data);setGame(data)})
+           .then(data=> {setGame(data)})
            .catch(error=> {console.log(error)})
 
-        // A crazy basic frontend solution:
+        // A basic frontend solution:
         let answer = Math.random();
         setSpin(true)
         setConfirm(false);
-           // Confirm this is correct not being >=.
+
+        // For security fairly certain you shouldn't be setting the outcome on frontend
         if(answer>0.5){
             setResult('Tails')
             if(!!call){
@@ -135,39 +143,14 @@ function Home({call, wallet, game, setGame, user, setUser, setCall, setResult, s
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {/* This button goes away once you've connected. */}
                     {auth?null:<button onClick={handleLogin} className="mt-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
-                    {auth?null:<>
-                    
-                    
-                    <table className="shadow-lg bg-white min-w-1/2 mt-2 divide-y-2 divide-gray-200" id="market-table">
-                        {/* This TR sets the grey seperator in your table - need a side border */}
-                        <thead>
-                            <tr>
-                            <th></th>
-                            </tr>
-                        </thead>
-                    <tbody className="shadow-lg bg-white min-w-1/2 mt-2 divide-y-2 divide-gray-200">
-                    {/* <tr className="hover:bg-white"> */}
-                    {/* Here is where you map */}
-                    <tr className="px-1 py-4 whitespace-nowrap text-l font-header divide-y-2 divide-gray-200 text-gray-900">
-                    <td className="px-1 py-4 whitespace-nowrap divide-y-2 divide-gray-200 text-gray-900">sumtingignigreallyreallreally long umtingignigreallyreallreally long</td>
-                    </tr>
-                            {/* Just use the above. don't need below, but thats an example of what'll happen when you map. */}
-
-
-                    <tr className="px-1 py-4 whitespace-nowrap text-sm font-medium divide-y-2 divide-gray-200 text-gray-900">
-                    <td className="px-1 py-4 whitespace-nowrap text-sm font-medium divide-y-2 divide-gray-200 text-gray-900">WORDS ON LINE2</td>
-                    </tr>
-
-                    </tbody>
-                  </table>
-
-
-      {/* render the full array here (have to add wallet into this array coming back.)
-      Map over the child component */}
-    {/* onClick={()=>{window.scrollTo(0, 0)}} */}
-    {/* </tr> */}
-
-            </>
+                    {auth?null:
+                    <div className="shadow-lg container mx-auto bg-white w-1/2 mt-2 divide-gray-200" id="market-table">
+                        <ul>
+                            {Array.isArray(recentGames)?recentGames.map((game)=> {
+                                return <Plays key={game.id} game={game}/>
+                            }):null}
+                        </ul>
+                  </div>
                     }
                     {/*  You MAY NEED A SECOND ONE OF THESE to "Play double or nothing" and sign a one time nonce like DCF */}
                 </div>

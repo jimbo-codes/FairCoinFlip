@@ -1,24 +1,17 @@
 # README
 
-This application has NOT HAD ITS BACKEND TOUCHED.
--- not even db:create.
--- we have to decide how we want to deal with this database before making any decisions.
-
-It is intended to setup a Postgresql database (confirm) to track user stats and historical wins, losses, etc.
-
-For now, the only focus is on building out frontend MVP functionality (with a mobile first build in)
-
-
 Known issues:
 Going back and forward causes failed requests + UI bugs.
 Ensure the user has the funds to bet, subtract their funds once they made the bet. <--- as a part of the game creation process
  setup params require for all
  Setup error handling for all
  Do not let the game play if the responses from fetch are not approved
+ Fix the breakpoints of small screen for the recent plays -- the no-wrap is causing issues. this works how you want it if you
+ just ignore the inner <span> element, then it will wrap both lines together.
+
 
 NEXT STEPS:
-On game creation reduce player $$$.
-**Serialize the return from your "games model fetch" for the recent plays**
+*** Fix the profile picture SVG ***
 Put together LIST of the stats you want to track
  --- create methods for summary statistics for the games that have been played
 8. Account, leaderboard
@@ -27,13 +20,14 @@ Put together LIST of the stats you want to track
 
 
 POST BACKEND MVP:
-5. Top Navbar links (leaderboard and backend stuff, but also INDIVIDUAL PLAYER INFO)
+5. Top Navbar links (leaderboard and backend stuff)
 1. Get an empty coin graphic (a missing coin) to display when you lose.
 5. Small links at bottom (faq, etc)
 6. Popup to gamble responsibly (and in right location)
 7. ADD BREAKPOINTS FOR non-mobile users, screen size optimization
 8. Your desktop should have more User info (more real estate)
 9. Tracking stats to know if they are desktop or mobile
+2. Dollar conversion for ETH - pull from other proj (update on every game update)
 
 QUESTIONS:
 *** Security risk for CSRF token (rails additional security beyond CORS)

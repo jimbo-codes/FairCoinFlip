@@ -7,6 +7,7 @@ class CreateGames < ActiveRecord::Migration[7.0]
       t.float :wagerResult
       t.boolean :flipResult
       t.boolean :userWin
+      t.integer :userStreak
       t.integer :user_id
       t.timestamps
     end

@@ -4,12 +4,12 @@ class GamesController < ApplicationController
   # GET /games
   def index
 
-    @games = Game.all
-    # You want to send back: User
-    # Send back wallet information
-    # Send back the $$$ won or lost
-    # Send the user winstreak to the game / result model too
-    render json: @games
+    # Get all the games you're gonna include (pick # to show in table)
+    @games = Game.last(10)
+    @games = @games.reverse
+    
+    # Need to reverse the order of this it seems
+    render json: @games, include: [:user]
   end
 
   # GET /games/1
@@ -26,6 +26,7 @@ class GamesController < ApplicationController
     user[:balance] -= params[:wagerAmount]
     user.save
     @game = Game.create(game_params)
+    # @game.user
     render json: @game, status: 200
   end
 
@@ -55,6 +56,7 @@ class GamesController < ApplicationController
       user[:winStreak] += 1
   else user[:winStreak] = 0
   end
+  game[:userStreak] = user[:winStreak];
 
   user.save
   game.save

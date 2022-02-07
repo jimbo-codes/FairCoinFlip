@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2022_02_03_174025) do
     t.float "wagerResult"
     t.boolean "flipResult"
     t.boolean "userWin"
+    t.integer "userStreak"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
