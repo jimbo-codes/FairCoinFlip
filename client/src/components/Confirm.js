@@ -5,21 +5,7 @@ function Confirm({wagerAmount, call, setConfirm, handleGamble}){
     }else if(call !== null){
         headsName = 'Heads'
     }
-    // function goBack(){
-    // setConfirm(false)
-    //         // fetch(`/games/${game.id}`,{
-    //     //     method:'DELETE',
-    //     //     headers: {
-    //     //      'Accept': 'application/json',
-    //     //      'Content-Type': 'application/json'
-    //     //    },
-           
-    //     // })
-    //     // .then(r=>r.json())
-    //     // .then(()=>setGame({}))
-    //     // .catch(error=> {console.log(error)})
-       
-    // }
+
     return(
         // Put a dollar conversion in this message - get ETH snapshot data
         <>

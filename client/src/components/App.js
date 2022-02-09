@@ -3,10 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import React,{useState,useEffect} from "react";
 import Result from './Result';
 import Navigation from './Navigation'
-import User from './User'
 
 function App() {
-
 // Some type of wristbanding -- how does this get implemented w/ web3?
   // useEffect(() => {
   //   fetch("/me").then((response) => {
@@ -16,20 +14,19 @@ function App() {
   //   });
   // }, []);
 
-  const [auth, setAuth] = useState(false);
-  const [wallet, setWallet] = useState('');
-  const [user, setUser] = useState({});
-  const [game, setGame] = useState({});
-  const [recentGames, setRecentGames] = useState({});
-  // Temporary setting for getting wallet squared.
   // For now (testing) this is set to true, but it should be set to false by default (obviously)
-  const [outcome, setOutcome] = useState('');
-  const [result, setResult] = useState('');
-  const [confirm, setConfirm] = useState(false);
-  // Sets the heads or tails call
-  const [call, setCall] = useState(0);
-  // Set how much is being wagered
-  const [wagerAmount, setWagerAmount] = useState(0);
+  const [auth, setAuth] = useState(false);
+  const [wallet, setWallet] = useState(''); // Wallet object to set on metamask login
+  const [balance, setBalance] = useState(0); // User balanace to set on metamask login
+  const [user, setUser] = useState({}); // user object to be set after either creation or fetch
+  const [game, setGame] = useState({}); // Current game state obj (updated with results as they occur)
+  const [recentGames, setRecentGames] = useState({}); // Fetch for the array of games to display on homepage
+  const [outcome, setOutcome] = useState(''); // what side of the coin was landed on
+  const [result, setResult] = useState(''); // result object (?)
+  const [confirm, setConfirm] = useState(false); // If we display intermediate confirm screen
+  const [call, setCall] = useState(0); // if player calls heads or tails (0=heads, 1 = tails)
+  const [wagerAmount, setWagerAmount] = useState(0); // amount player is betting
+  const [liveBet, setLiveBet] = useState(false); // variable to go from logged -> playing
   
   // Attempted fixes for CSRF Token (Required to make non-fetch requests)
   // const [csrfToken, setcsrfTokenState] = useState('');
@@ -40,11 +37,9 @@ function App() {
   // console.log(token);
 
   useEffect(() => {
-    // Have this wallet set from your metamask portion.
-  setWallet('0xaea01704d80288FA97B0de0bc0758d5D2B0b81E1');
 
   // This will eventually be wristbanding. for now using it to pull in games array.
-
+  // Have the fetch NOT check if its a checksum'd ETH address. (downcase it)
     fetch(`/games`)
     .then(r=>r.json())
     .then(games=> {console.log(games);setRecentGames(games)})
@@ -55,9 +50,6 @@ function App() {
     <div> 
       <div className='top-0'>
         <Navigation />      
-        {/* This lower div does nothin' since not sticky */}
-          <div className='z-50'>
-          </div>
       </div>
 
       <Routes>

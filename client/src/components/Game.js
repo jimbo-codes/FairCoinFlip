@@ -11,7 +11,6 @@ function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
     }
 
     function handleBet(e){
-
         switch(e.target.textContent){
             case '.01 ETH':
                 setWagerAmount(0.01);
@@ -32,13 +31,13 @@ function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
                 setWagerAmount(0.25);
             break;
             default:
-                console.log("This should never occur")
+                console.log("This should never occur. Congratulations.")
         }
     }
     return(
         <>
         <h3 className='font-header text-center mt-2 mb-2 text-2xl'>It's gonna be:</h3>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-5">
             {call===false?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-yellow-600">Heads</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Heads</button>}
             {call===true?<button onClick={betClick} className="col-span-3 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-500">Tails</button>:<button onClick={betClick} className="col-start-2 h-12 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">Tails</button>}
     
@@ -46,7 +45,7 @@ function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
     
                         {/* You can make "ETH" the eth image instead? */}
         {wagerAmount===0.01?<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.01 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.01 ETH</button>}
-        {wagerAmount===0.025?<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.025 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.025 ETH</button>}
+        {wagerAmount===0.025?<button onClick={handleBet} className="px-3 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.025 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.025 ETH</button>}
         {wagerAmount===0.05?<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.05 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.05 ETH</button>}
         {wagerAmount===0.075?<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.075 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.075 ETH</button>}
         {wagerAmount===0.1?<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-red-400">.1 ETH</button>:<button onClick={handleBet} className="px-4 py-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">.1 ETH</button>}
