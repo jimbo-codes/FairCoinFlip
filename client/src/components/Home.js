@@ -19,6 +19,7 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
     const [errorMessage, setErrorMessage] = useState(null);
     let coin = document.querySelector(".coin");
     let logBut = document.getElementById('login')
+    const [flipped, setFlipped] = useState(false);
 
     
     { // Ethers function to force refresh if someone changes network on their acct.
@@ -51,10 +52,6 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
             // After running getaccount have them cick another button to setauth (letsride, etc.)
             // That second button has them sign a one time nonce (idk why you'd need this)
                     // ONLY set these things IF the metamask stuff works
-    
-            // Move this fetch to the second button to play (which fires one time nonce (?))
-            
-            // After this IF the user doesn't exist, then (post) create a user in our DB
         }
 
     //   Get metamask acct info
@@ -85,14 +82,29 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
             // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
         console.log(wallet)
-        // Downcase the wallet in your database when identifying who
         fetch(`/me/${wallet}`)
-        .then((r) => {return r.json();})
+        .then((r) => r.json())
         .then(data=>{ 
-            setUser(data);
-            console.log(data)})    
-            setLiveBet(true)
-        }
+            if(!data.error){
+                setUser(data);
+                setLiveBet(true)
+            }else{
+                return fetch(`users/`,{
+                    method:'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                    balance: user,
+                    wallet: wallet
+                    })
+                })
+                .then(r=>r.json())
+                .then(data=>{setUser(data);setLiveBet(true)})
+            }            
+        })    
+    }
     
     // Once logged in, update user stats on gameupdate. OR wallet update
     useEffect(() => {
@@ -120,7 +132,6 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
     function handleGamble(){
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)
-
             // This post is undefined when you make it
             console.log(user)
             // THIS RETURNS THE BALANCE NOT THE ACTUAL USER ^^
@@ -140,7 +151,7 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
            .then(data=> {setGame(data)})
            .catch(error=> {console.log(error)})
 
-        // A basic frontend solution:
+        // A basic frontend solution for now:
         let answer = Math.random();
         setSpin(true)
         setConfirm(false);
@@ -164,18 +175,53 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
         }
         // Make that coin spin beyotch
         coin.style.animation = "none";
-        if(answer<=0.5){
-            setTimeout(function(){
-                coin.style.animation = "spin-heads 3s forwards";
-            }, 100);
+        if(!!call){ // when you bet tails:
+            console.log('we in here!')
+            if(answer<=0.5){ // this means reuslt is heads.
+                setTimeout(function(){
+                    coin.style.animation = "spin-heads-L 3s forwards";
+                }, 100); 
+            }else{
+                setTimeout(function(){
+                    coin.style.animation = "spin-tails-W 3s forwards";
+                }, 100); 
+            }
+            
+        }else{
+        if(answer<=0.5){ // this means reuslt is heads.
+                setTimeout(function(){
+                    coin.style.animation = "spin-heads 3s forwards";
+                }, 100);    
         }
         else{
             setTimeout(function(){
                 coin.style.animation = "spin-tails 3s forwards";
             }, 100);
         }
+    }
+
         // Timeout after the coin spins to send you to results
         setTimeout(()=>{navigate('/result')}, 3000);
+    }
+    let start = 0;
+    let end = 180;
+    function flipCoin(e){ // This is when you bet tails, this works PERFECTLY.
+        if(e.target.textContent==='Tails'){
+           // This is always going to be your first flip, from 0 -> 180.
+            coin.style.setProperty('--start', start+'deg')
+            coin.style.setProperty('--end', end+'deg')
+            setTimeout(function(){
+                coin.style.animation = "flip-test 1s forwards";
+            }, 100);
+        }
+        else {
+            
+            coin.style.setProperty('--start', start+'deg')
+            coin.style.setProperty('--end', end+'deg')
+            setTimeout(function(){
+                coin.style.animation = "flip-heads 1s forwards";
+            }, 100);
+        }
     }
 
     // Have a popup disclaimer once wallet is connected "saying I certify / agree that this is not illegal where I am, etc." (ONCE)
@@ -195,7 +241,33 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
                 <div className="grid place-items-center align-middle" >
                 {auth?<User user={user} liveBet={liveBet}/>:null}
 
-                    <div className="coin" id="coin">
+{/* If you click tails, rotate 180. if you then click heads, rotate +180 */}
+                <div className="coin" id="coin">
+                    <div id="coinH" className="heads"> 
+                        <img className="float-left justify-center lg h-42 w-auto"
+                        src={coinF}
+                        alt="Future Flip Heads"/>
+                        </div>
+
+                        <div className="tails absolute justify-center ">
+                        <img className="float-left justify-center lg h-42 w-auto"
+                        src={coinB}
+                        alt="Future Flip Tails"/>
+                        </div>
+                    </div>
+                    {/* {call===true?<div className="coin" id="coin">
+                    <div className="heads"> 
+                        <img className="float-left justify-center lg h-42 w-auto"
+                        src={coinB}
+                        alt="Future Flip Heads"/>
+                        </div>
+
+                        <div className="tails absolute justify-center ">
+                        <img className="float-left justify-center lg h-32 w-auto"
+                        src={coinF}
+                        alt="Future Flip Tails"/>
+                        </div>
+                    </div>:<div className="coin" id="coin">
                     <div className="heads"> 
                         <img className="float-left justify-center lg h-42 w-auto"
                         src={coinF}
@@ -207,10 +279,10 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
                         src={coinB}
                         alt="Future Flip Tails"/>
                         </div>
-                    </div>
+                    </div>} */}
 
                     {/* Render the betting if result is empty. */}
-                    {result===''&&auth&&!confirm&&liveBet?<Game error={error} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
+                    {result===''&&auth&&!confirm&&liveBet?<Game error={error} flipCoin={flipCoin} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
                     {confirm?<Confirm game={game} setGame={setGame} wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}

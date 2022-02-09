@@ -1,12 +1,18 @@
 import React from "react";
 
-function Game({handleClick, wagerAmount, setWagerAmount, call, setCall, error}){
+function Game({handleClick, flipCoin, swapHeads, wagerAmount, setWagerAmount, call, setCall, error}){
     
     function betClick(e){
         if(e.target.textContent === 'Heads'){
-            setCall(false);
+            if(call===0){
+                setCall(false)
+            }else{
+                setCall(false);
+                flipCoin(e)
+            }
         }else if(e.target.textContent ==='Tails'){
             setCall(true);
+            flipCoin(e)
         }
     }
 
