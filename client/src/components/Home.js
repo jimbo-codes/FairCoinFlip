@@ -4,8 +4,8 @@ import Game from './Game';
 import Socials from './Socials'
 import Confirm from './Confirm'
 import Navigation from './Navigation'
-import coinF from '../images/CoinFront.png';
-import coinB from '../images/CoinBack.png';
+import coinF from '../images/Coin_Heads.png';
+import coinB from '../images/Coin_Tails.png';
 import User from './User';
 import Plays from './Plays';
 import {ethers} from 'ethers'
@@ -82,13 +82,17 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
         
         function startGame(){
             // You're going to sign the one time nonce here (why is this necessary?)
+            // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
+        console.log(wallet)
+        // Downcase the wallet in your database when identifying who
+        fetch(`/me/${wallet}`)
+        .then((r) => {return r.json();})
+        .then(data=>{ 
+            setUser(data);
+            console.log(data)})    
+            setLiveBet(true)
         }
-    // Now create the new button to display
-    // AFTER THIS LOGIN - fire this:
-    // fetch(`/me/${wallet}`)
-    //     .then((r) => {return r.json();})
-    //     .then(data=>{ setAuth(true); setUser(data); console.log(data)})
     
     // Once logged in, update user stats on gameupdate. OR wallet update
     useEffect(() => {
@@ -116,6 +120,10 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
     function handleGamble(){
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)
+
+            // This post is undefined when you make it
+            console.log(user)
+            // THIS RETURNS THE BALANCE NOT THE ACTUAL USER ^^
             fetch('/games',{
                 method:'POST',
                 headers: {
@@ -185,19 +193,19 @@ function Home({call, wallet, setWallet, liveBet, setLiveBet, game, recentGames, 
             {/* </h3> */}
             {/* This pixel font is kinda ugly. You can change it in the font family of tailwind.config. */}
                 <div className="grid place-items-center align-middle" >
-                {auth?<User user={user}/>:null}
+                {auth?<User user={user} liveBet={liveBet}/>:null}
 
                     <div className="coin" id="coin">
                     <div className="heads"> 
                         <img className="float-left justify-center lg h-42 w-auto"
                         src={coinF}
-                        alt="Degen Coin Flip"/>
+                        alt="Future Flip Heads"/>
                         </div>
 
                         <div className="tails absolute justify-center ">
                         <img className="float-left justify-center lg h-32 w-auto"
                         src={coinB}
-                        alt="Degen Coin Flip"/>
+                        alt="Future Flip Tails"/>
                         </div>
                     </div>
 

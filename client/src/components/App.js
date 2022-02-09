@@ -55,7 +55,7 @@ function App() {
       <Routes>
         <Route path='result/' element={<Result user={user} setUser={setUser} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
 
-        <Route path='/' element={<Home 
+        <Route path='/' element={<Home
         recentGames={recentGames}
         user={user}
         game={game}
@@ -65,6 +65,8 @@ function App() {
         setAuth={setAuth}
         wallet={wallet}
         setWallet={setWallet}
+        liveBet={liveBet}
+        setLiveBet={setLiveBet}
         // csrfToken={csrfToken}
         confirm={confirm}
         setConfirm={setConfirm}

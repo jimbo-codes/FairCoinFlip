@@ -1,7 +1,12 @@
 import React,{useEffect} from "react";
 import { Link } from 'react-router-dom';
 import Socials from './Socials'
+import coinF from '../images/Coin_Heads.png';
+import coinB from '../images/Coin_Tails.png';
+import noCoin from '../images/Coin_Loss.png';
+import coinReverse from '../images/Coin_Heads_Reverse.png';
 import Navigation from "./Navigation";
+
 
 // You should route to this page once they have signed the approval transaction, they take the $ out of your wallet AT THIS STAGE
 
@@ -13,8 +18,6 @@ function Result({result, user, setUser, game, setGame, outcome, wagerAmount, set
     setCall();
     setConfirm(false);
     setGame({})
-
-    // Any required actions (post to send ETH, etc.)
 }
 
 // HOW DO YOU PASS GAMEID Securely here??? - this should probably all be backend w/ sessions (?)
@@ -22,7 +25,7 @@ function Result({result, user, setUser, game, setGame, outcome, wagerAmount, set
 let resultObj = {...game, 
     result:result, 
     outcome:outcome}
-
+console.log(result);
 useEffect(() => { 
     fetch(`/games/${resultObj.id}`,{
         method:'PATCH',
@@ -77,16 +80,27 @@ useEffect(() => {
                 <div className="grid place-items-center align-middle" >
 
                     {/* SET THE IMAGE DISPLAYED BASED ON BEING HEADS OR TAILS. Figure out a flipping animation too. */}
-                        {outcome?<div className="flex">
-                                    <img className="float-left justify-center lg h-32 w-auto"
-                                    src="https://i.ibb.co/7Js60Ym/Dcf.png"
-                                    alt="Degen Coin Flip"/>
+                        {outcome?
+                        result=="Heads"? // Case if won, and result = heads
+                        <div className="flex">
+                                    <img className="float-left px-2 justify-center lg h-32 w-auto"
+                                    src={coinReverse}
+                                    alt="Future Flip Heads"/>
                                     <img className="float-right justify-center lg h-32 w-auto"
-                                    src="https://i.ibb.co/7Js60Ym/Dcf.png"
-                                    alt="Degen Coin Flip"/>
-                                    </div>:<img className="float-left justify-center lg h-32 w-auto"
-                                    src="https://i.ibb.co/7Js60Ym/Dcf.png"
-                                    alt="Degen Coin Flip"/>}
+                                    src={coinF}
+                                    alt="Future Flip Tails"/>
+                                    </div>:
+                                        <div className="flex">
+                                        <img className="float-left px-2 justify-center lg h-32 w-auto"
+                                        src={coinB}
+                                        alt="Future Flip Heads"/>
+                                        <img className="float-right justify-center lg h-32 w-auto"
+                                        src={coinB}
+                                        alt="Future Flip Tails"/>
+                                        </div>:
+                                    <img className="float-left justify-center lg h-32 w-auto"
+                                    src={noCoin}
+                                    alt="Losing Coin"/>}
                     <h3 className='font-header text-center mt-8 mb-4 text-2xl'>{result}{outcome?'!':'.'} {outcome?`You Doubled your money, winning ${wagerAmount*2} ETH!`:`You lost ${wagerAmount} ETH.`}</h3>
                     <Link to='/' onClick={playAgain} className="h-8 border border-transparent text-xl font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-indigo-700 outline-none ring-2 ring-offset-2 ring-yellow-600">Play Again</Link>
     {/* I think you should just put in the betting interface here -- will depend on the logistics of claiming $$$ */}
