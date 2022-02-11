@@ -92,11 +92,12 @@
     }
 }
 
-@keyframes flip-test{
+/* This is if you want to use variables, ended up not being needed. */
+/* @keyframes flip-test{
     0%{
         transform: rotateX(var(--start));
     }
     100%{
         transform: rotateX(var(--end));
     }
-}
+} */

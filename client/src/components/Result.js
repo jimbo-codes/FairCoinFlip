@@ -10,64 +10,56 @@ import Navigation from "./Navigation";
 
 // You should route to this page once they have signed the approval transaction, they take the $ out of your wallet AT THIS STAGE
 
-function Result({result, user, setUser, game, setGame, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
+function Result({result, user, setUser, funMode, game, setGame, outcome, wagerAmount, setWagerAmount, call, setCall, setResult, setOutcome, setConfirm}){
     function playAgain(){
     setResult('');
     setOutcome('');
     setWagerAmount(0);
-    setCall();
+    setCall(1);
     setConfirm(false);
     setGame({})
 }
 
 // HOW DO YOU PASS GAMEID Securely here??? - this should probably all be backend w/ sessions (?)
-// This is for sure not secure.
+
+// Feels like this method can't be secure?? what risks are here?
 let resultObj = {...game, 
     result:result, 
     outcome:outcome}
-console.log(result);
+console.log(resultObj);
 useEffect(() => { 
-    fetch(`/games/${resultObj.id}`,{
-        method:'PATCH',
-        headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify(resultObj)
-    })
-    .then(r=>r.json())
-    // Can you just change these things for the User/userid route direct from game?
-    .then(data=>console.log(data))
-
-    // No longer need the below user update, you built this into the game + result route.
-    // Need to make sure your wristbanding for user is done so you keep updating data.
-
-    //     ()=> {
-    //     // Do you want this to occur here? would having it happen on backend in the single above route be better?
-    //     return fetch(`/users/${user.id}`,{
-    //         method:'PATCH',
-    //         headers: {
-    //          'Accept': 'application/json',
-    //          'Content-Type': 'application/json',
-    //        },
-    //        body: JSON.stringify(resultObj)
-    //     })
-    //     .then(r=>r.json())
-    //     .then(data=> setUser(data))
-    // })
-    // Idt you need to do anything w/ this data coming back.
-    // Need this kind of syntax to do the double fetch
-    // .then(e=>{
-    // return fetch(`https://api.coingecko.com/api/v3/coins/${e.coin_id}`)
-// })
-    .catch(error=> {console.log(error)})
+    // MAKE SURE TO SET THIS DIFF FOR FUN ROUTE:
+    if(funMode){
+        fetch(`/fun_games/${resultObj.id}`,{
+            method:'PATCH',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(resultObj)
+        })
+        .then(r=>r.json())
+        .then(data=>console.log(data))
+        .catch(error=> {console.log(error)})
+    }else{
+        fetch(`/games/${resultObj.id}`,{
+            method:'PATCH',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(resultObj)
+        })
+        .then(r=>r.json())
+        // Can you just change these things for the User/userid route direct from game?
+        .then(data=>console.log(data))
+        .catch(error=> {console.log(error)})
+    }
     },[game])
 
     return(
     // Have outcome say "You win $xxxx ETH! (in green)"
-    
     // Style one of these two things differently?
-    // Have it delay the display until the animation is done (?)
     <>
         <h1 className="font-header text-center mt-6 mb-2 text-6xl">{outcome?"Double!":"Nothing."}</h1>
            
@@ -81,7 +73,7 @@ useEffect(() => {
 
                     {/* SET THE IMAGE DISPLAYED BASED ON BEING HEADS OR TAILS. Figure out a flipping animation too. */}
                         {outcome?
-                        result=="Heads"? // Case if won, and result = heads
+                        result==="Heads"? // Case if won, and result = heads
                         <div className="flex">
                                     <img className="float-left px-2 justify-center lg h-32 w-auto"
                                     src={coinReverse}

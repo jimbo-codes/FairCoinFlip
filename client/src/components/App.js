@@ -27,7 +27,8 @@ function App() {
   const [call, setCall] = useState(0); // if player calls heads or tails (0=heads, 1 = tails)
   const [wagerAmount, setWagerAmount] = useState(0); // amount player is betting
   const [liveBet, setLiveBet] = useState(false); // variable to go from logged -> playing
-  
+  const [funMode, setFunMode] = useState(false); // play with fake money.
+
   // Attempted fixes for CSRF Token (Required to make non-fetch requests)
   // const [csrfToken, setcsrfTokenState] = useState('');
   // const thing = document.querySelector("meta[name='csrf-token']").getAttribute("content");
@@ -53,13 +54,15 @@ function App() {
       </div>
 
       <Routes>
-        <Route path='result/' element={<Result user={user} setUser={setUser} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
+        <Route path='result/' element={<Result user={user} setUser={setUser} funMode={funMode} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
 
         <Route path='/' element={<Home
         recentGames={recentGames}
         user={user}
         game={game}
         setGame={setGame}
+        funMode={funMode}
+        setFunMode={setFunMode}
         user={user}
         setUser={setUser}
         setAuth={setAuth}
