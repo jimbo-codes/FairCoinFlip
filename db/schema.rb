@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_03_174025) do
+ActiveRecord::Schema.define(version: 2022_02_11_012017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "fun_games", force: :cascade do |t|
+    t.boolean "call"
+    t.float "wagerAmount"
+    t.float "wagerResult"
+    t.boolean "flipResult"
+    t.boolean "funUserWin"
+    t.integer "funUserStreak"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "games", force: :cascade do |t|
     t.boolean "call"
@@ -27,18 +39,11 @@ ActiveRecord::Schema.define(version: 2022_02_03_174025) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  # create_table "results", force: :cascade do |t|
-  #   t.float "wagerResult"
-  #   t.boolean "flipResult"
-  #   t.boolean "win"
-  #   t.integer "game_id"
-  #   t.datetime "created_at", precision: 6, null: false
-  #   t.datetime "updated_at", precision: 6, null: false
-  # end
-
   create_table "users", force: :cascade do |t|
     t.string "wallet"
     t.float "balance"
+    t.float "funBal", default: 10.0
+    t.integer "funStreak", default: 0
     t.integer "winStreak", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -7,7 +7,7 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 # puts('seeding user')
-User.create(wallet: "0xaea01704d80288FA97B0de0bc0758d5D2B0b81E1", balance: 5.00, winStreak: 0)
+User.create(wallet: "0xaea01704d80288fa97b0de0bc0758d5d2b0b81e1", balance: 5.00, winStreak: 0)
 # puts('seeding game')
 # Game.create(call: "false", wagerAmount: 0.25, user_id: 1)
 # puts('seeding result')

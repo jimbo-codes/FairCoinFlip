@@ -1,0 +1,2 @@
+module FunGamesHelper
+end

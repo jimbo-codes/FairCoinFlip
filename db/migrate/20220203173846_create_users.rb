@@ -3,11 +3,9 @@ class CreateUsers < ActiveRecord::Migration[7.0]
     create_table :users do |t|
       t.string :wallet
       t.float :balance
+      t.float :funBal, :default => 10
+      t.integer :funStreak, :default => 0
       t.integer :winStreak, :default => 0
-      # If this doesnt work create a second migration to set default
-      #   def change
-      #     change_column :widgets, :colour, :string, default: 'red'
-      # end
       t.timestamps
     end
   end
