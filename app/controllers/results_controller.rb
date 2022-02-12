@@ -19,6 +19,7 @@ class ResultsController < ApplicationController
         win = params[:outcome]
 
         user = User.find_by_id(params[:user_id])
+        # Set this win streak in the game/result model too
         if win
             user[:winStreak] += 1
         else user[:winStreak] = 0

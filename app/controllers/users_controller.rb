@@ -34,8 +34,6 @@ end
 
  # PATCH /users/1
   def update
-
-    # It feels like the way you need to track this winstreak is computationally too much.
     user= User.find_by_id(params[:user_id])
     if params[:outcome]
       wagerResult = params[:wagerAmount]*2

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import React,{useState,useEffect} from "react";
 import Result from './Result';
 import Navigation from './Navigation'
+import Stats from './Stats';
 
 function App() {
 // Some type of wristbanding -- how does this get implemented w/ web3?
@@ -54,8 +55,8 @@ function App() {
       </div>
 
       <Routes>
+        <Route path='/stats/' element={<Stats></Stats>}/>
         <Route path='result/' element={<Result user={user} setUser={setUser} funMode={funMode} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
-
         <Route path='/' element={<Home
         recentGames={recentGames}
         user={user}
