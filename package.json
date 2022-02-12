@@ -22,11 +22,12 @@
     "web3": "^1.7.0"
   },
   "scripts": {
-    "prestart": "next build",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "start": "craco start",
+    "build": "craco build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
