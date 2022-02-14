@@ -15,9 +15,9 @@ Plan of Attack:
 
 
 Feature List:
+- Usehistory (/ usenavigate) to prevent user back button (send dashboard)
 - NFTs
 - NFT Staking (Down the line)
-- 
 
 Known issues:
 Troubleshoot creating a new user (this could be a no-wifi issue, not clear.)

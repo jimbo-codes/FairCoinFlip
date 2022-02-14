@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.all
+    @users = @users.order(funBal: :desc)
     render json: @users
   end
 

@@ -29,6 +29,10 @@ function App() {
   const [wagerAmount, setWagerAmount] = useState(0); // amount player is betting
   const [liveBet, setLiveBet] = useState(false); // variable to go from logged -> playing
   const [funMode, setFunMode] = useState(false); // play with fake money.
+  const [statView, setStatView] = useState(false); // to change nav bar when in stats
+  const [toggle, setToggle] = useState(false);
+  const [leaders, setLeaders] = useState([]);
+
 
   // Attempted fixes for CSRF Token (Required to make non-fetch requests)
   // const [csrfToken, setcsrfTokenState] = useState('');
@@ -44,18 +48,18 @@ function App() {
   // Have the fetch NOT check if its a checksum'd ETH address. (downcase it)
     fetch(`/games`)
     .then(r=>r.json())
-    .then(games=> {console.log(games);setRecentGames(games)})
+    .then(games=> {setRecentGames(games)})
     .catch(error=> {console.log(error)})
   },[game])
 
   return (
     <div> 
       <div className='top-0'>
-        <Navigation />      
+        <Navigation toggle={toggle} setToggle={setToggle} leaders={leaders} setStatView={setStatView}/>
       </div>
 
       <Routes>
-        <Route path='/stats/' element={<Stats></Stats>}/>
+        <Route path='/stats/' element={<Stats leaders={leaders} setLeaders={setLeaders} toggle={toggle} setToggle={setToggle} user={user}></Stats>}/>
         <Route path='result/' element={<Result user={user} setUser={setUser} funMode={funMode} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
         <Route path='/' element={<Home
         recentGames={recentGames}

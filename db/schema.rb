@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2022_02_11_012017) do
   create_table "users", force: :cascade do |t|
     t.string "wallet"
     t.float "balance"
+    t.string "nickname"
     t.float "funBal", default: 10.0
     t.integer "funStreak", default: 0
     t.integer "winStreak", default: 0

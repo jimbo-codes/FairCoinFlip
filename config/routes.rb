@@ -8,5 +8,5 @@ Rails.application.routes.draw do
   #sessions/ login routes
   # post "/me/:wallet", to: "users#show"
   get "/me/:wallet", to: "users#show"
-
+  get "/leaders", to: "users#index"
 end

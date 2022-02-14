@@ -90,7 +90,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
                 console.log(wallet)
-                console.log(user);
+                // console.log(user);
                 fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
@@ -175,8 +175,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
            .catch(error=> {console.log(error)})
 
         }
-        console.log(user)
-
+        console.log(user.funStreak)
         // Real code:
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)
