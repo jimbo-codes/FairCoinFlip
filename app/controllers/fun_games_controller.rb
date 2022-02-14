@@ -4,8 +4,6 @@ class FunGamesController < ApplicationController
 
     # GET /funGames
     def index
-        debugger
-        
     end
 
     # POST /funGames

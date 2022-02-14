@@ -89,8 +89,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             // You're going to sign the one time nonce here (why is this necessary?)
             // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
-                console.log(wallet)
-                // console.log(user);
+            console.log(wallet)
                 fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
@@ -175,7 +174,6 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
            .catch(error=> {console.log(error)})
 
         }
-        console.log(user.funStreak)
         // Real code:
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)
@@ -254,6 +252,10 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         }
     }
 
+    function tempHold(){
+        let butt = document.getElementById('begin')
+        butt.textContent='Going Live soon!'
+    }
     // Have a popup disclaimer once wallet is connected "saying I certify / agree that this is not illegal where I am, etc." (ONCE)
         return(
         <>
@@ -292,8 +294,8 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
                     {/* Below button begins the game */}
-                    {!liveBet&&auth?<><button onClick={startGame} className='mt-2 mb-2 px-4 py-2 border-4 border-indigo-500 text-4xl font-header hover:bg-indigo-700 hover:text-white shadow-sm'>Click to begin...</button>
-                    <h3>or compete in <button onClick={startGame} className="text-blue-500">Fun Mode</button></h3>
+                    {!liveBet&&auth?<><button onClick={tempHold} id='begin' className='mt-2 mb-2 px-4 py-2 border-4 border-indigo-500 text-4xl font-header hover:bg-indigo-700 hover:text-white shadow-sm'>Click to begin...</button>
+                    <h3>compete in <button onClick={startGame} className="text-blue-500">Fun Mode</button></h3>
                     </>
                     :null}
                     {liveBet?null:
