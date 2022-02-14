@@ -14,7 +14,7 @@ return(
 
                         {/* SET YOUR DISCORD LINK */}
                     <a
-                    href="https://discord.com"
+                    href="https://discord.com/invite/agfbM7xH"
                     className="flex flex-col py-2 px-2 rounded-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
                         <span className="sr-only">Come join us on Discord.</span>
