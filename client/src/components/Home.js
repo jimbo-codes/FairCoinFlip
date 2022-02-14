@@ -1,9 +1,8 @@
 import React,{useState, useEffect} from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Game from './Game';
 import Socials from './Socials'
 import Confirm from './Confirm'
-import Navigation from './Navigation'
 import coinF from '../images/Coin_Heads.png';
 import coinB from '../images/Coin_Tails.png';
 import User from './User';
@@ -22,18 +21,18 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
     const [flipped, setFlipped] = useState(false);
 
     
-    { // Ethers function to force refresh if someone changes network on their acct.
-        // The "any" network will allow spontaneous network changes
-        const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-        provider.on("network", (newNetwork, oldNetwork) => {
-            // When a Provider makes its initial connection, it emits a "network"
-            // event with a null oldNetwork along with the newNetwork. So, if the
-            // oldNetwork exists, it represents a changing network
-            if (oldNetwork) {
-                window.location.reload();
-            }
-        });
-    }
+    // { // Ethers function to force refresh if someone changes network on their acct.
+    //     // The "any" network will allow spontaneous network changes
+    //     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    //     provider.on("network", (newNetwork, oldNetwork) => {
+    //         // When a Provider makes its initial connection, it emits a "network"
+    //         // event with a null oldNetwork along with the newNetwork. So, if the
+    //         // oldNetwork exists, it represents a changing network
+    //         if (oldNetwork) {
+    //             window.location.reload();
+    //         }
+    //     });
+    // }
 
         // Onclick function to connect wallet
         function handleLogin(){
@@ -91,7 +90,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
                 console.log(wallet)
-                console.log(user);
+                // console.log(user);
                 fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
@@ -176,8 +175,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
            .catch(error=> {console.log(error)})
 
         }
-        console.log(user)
-
+        console.log(user.funStreak)
         // Real code:
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)

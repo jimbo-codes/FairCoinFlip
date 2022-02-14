@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
-  resources :results
+  # resources :results
   resources :games
-  resources :users, only: [:index, :update, :show]
+  resources :fun_games, only: [:index, :update, :create]
+  resources :users, only: [:index, :update, :show, :create]
+
 
   #sessions/ login routes
   # post "/me/:wallet", to: "users#show"
   get "/me/:wallet", to: "users#show"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get "/leaders", to: "users#index"
 end

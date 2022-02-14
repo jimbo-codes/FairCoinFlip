@@ -39,7 +39,7 @@ useEffect(() => {
            body: JSON.stringify(resultObj)
         })
         .then(r=>r.json())
-        .then(data=>console.log(data))
+        // .then(data=>console.log(data))
         .catch(error=> {console.log(error)})
     }else{
         fetch(`/games/${resultObj.id}`,{
