@@ -322,6 +322,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                   </div>
                   </>
                     }
+                    {/* Adding a comment to fix. */}
                     {/*  You MAY NEED A SECOND ONE OF THESE to "Play double or nothing" and sign a one time nonce like DCF */}
                 </div>
         </div>
