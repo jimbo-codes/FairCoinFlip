@@ -4,6 +4,10 @@ class FunGamesController < ApplicationController
 
     # GET /funGames
     def index
+      funGames = FunGame.last(10)
+      funGames = funGames.reverse
+      
+      render json: funGames, include: [:user]
     end
 
     # POST /funGames

@@ -46,7 +46,7 @@ function App() {
 
   // This will eventually be wristbanding. for now using it to pull in games array.
   // Have the fetch NOT check if its a checksum'd ETH address. (downcase it)
-    fetch(`/games`)
+    fetch(`/fun_games`)
     .then(r=>r.json())
     .then(games=> {setRecentGames(games)})
     .catch(error=> {console.log(error)})

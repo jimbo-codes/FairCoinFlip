@@ -17,7 +17,6 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
     const [spin, setSpin] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     let coin = document.querySelector(".coin");
-    let logBut = document.getElementById('login')
     const [flipped, setFlipped] = useState(false);
 
     
@@ -36,8 +35,8 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 
         // Onclick function to connect wallet
         function handleLogin(){
+    let logBut = document.getElementById('login')
             if (window.ethereum && window.ethereum.isMetaMask) {
-                console.log('MetaMask Here!');
                 // Here change your button text to "connecting" and add disabled=true to button.
                 logBut.disabled = true;
                 logBut.textContent = "Connecting..."
@@ -48,8 +47,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                 // create an <a> href to link them to install metamask (not necessary rn)
                 setErrorMessage('Please install MetaMask browser extension to interact');
             }
-            // After running getaccount have them cick another button to setauth (letsride, etc.)
-            // That second button has them sign a one time nonce (idk why you'd need this)
+            // That second button maybe sign a one time nonce
                     // ONLY set these things IF the metamask stuff works
         }
 

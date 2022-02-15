@@ -1,5 +1,4 @@
 function Plays({game}){
-
     let userAbbrev = game.user.wallet.substring(0,4)
     let date = Date.parse(game.updated_at);
     let currTime = Date.now();
@@ -19,7 +18,7 @@ function Plays({game}){
             seconds<172800?time = `${parseInt(seconds/86400)} day ago`:time = `${parseInt(seconds/86400)} days ago`
         }
     
-    let streak= game.userStreak
+    let streak= game.funUserStreak
     return(
         <li className="flex relative px-1 text-xl text-center font-header border-x-2 border-t-2 divide-gray-200 text-gray-900">
             
@@ -29,7 +28,7 @@ function Plays({game}){
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
                 </svg>
             <div className="flex px-1 py-2 text-gray-900">Wallet ({userAbbrev}..) bet {game.wagerAmount} and
-            {game.userWin?
+            {game.funUserWin?
                 streak>1? <span className="flex px-1.5 text-green-600"> doubled {streak} times!</span>:
                 // User win case
                 ` doubled!`:
