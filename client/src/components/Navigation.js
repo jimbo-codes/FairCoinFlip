@@ -26,7 +26,7 @@ function Navigation({setStatView, setToggle, leaders, toggle}){
         }
         }
     return(
-        <div className="flex justify-center mt-6 flex-sm-column h-10 justify-content-start items-center align-items-center">
+        <div className="flex justify-center mt-2 flex-sm-column h-10 justify-content-start items-center align-items-center">
             <div className="mt-2">
                     {/* <button onClick={stats} className="mt-4 px-6 mx-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 outline-none">Statistics</button> */}
                     {location.pathname==='/stats'?
@@ -34,7 +34,7 @@ function Navigation({setStatView, setToggle, leaders, toggle}){
                     <div className='flex align-baseline mt-2 p-2'>
                     <h1 className="inline-block flex items-center justify-center font-header mt-10 mb-2 text-xl">Double or Nothing.</h1>
                     <div>
-                    <button onClick={leaders} className="flex mt-8 mb-2 px-4 mx-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-green-600 shadow-sm outline-none">Play Again</button>
+                    <button onClick={leaders} className="flex mt-12 mb-1 px-4 mx-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-green-600 shadow-sm outline-none">Play Again</button>
                         <div className="float ml-1 mb-2">
                             <div className="bg-gray-200 text-xs text-gray-500 leading-none border-2 border-gray-200 rounded-full inline-flex">
     
@@ -73,7 +73,7 @@ function Navigation({setStatView, setToggle, leaders, toggle}){
 
                     </div>
                     </>
-                    :<button onClick={leaders} className="mt-4 px-4 mx-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 outline-none">Leaderboard</button>}
+                    :<button onClick={leaders} className="mt-2 px-4 mx-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 outline-none">Leaderboard</button>}
                     <button></button>
                 </div>
 

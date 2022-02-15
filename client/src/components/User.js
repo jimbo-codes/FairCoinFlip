@@ -1,4 +1,4 @@
-function User({user, funMode, liveBet}){
+function User({user, spin, funMode, liveBet}){
     // We need to work on the sizing depending on screen res.
     // What should mobile flow look like. what info is displayed?
     // Probably JUST do balance, and put rest in statistics?
@@ -8,7 +8,7 @@ function User({user, funMode, liveBet}){
     funMode?rounded = Number(user.funBal).toFixed(3):rounded = Number(user.balance).toFixed(4)
 return(
     <>
-    {liveBet?
+    {liveBet&&!spin?
     funMode?
     <div className="flex justify-center flex-sm-column justify-content-start items-center align-items-center">
         <p className="font-header text-center mx-4 text-xl">Balance: {rounded} FUN   </p>

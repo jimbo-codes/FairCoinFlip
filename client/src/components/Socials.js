@@ -3,7 +3,7 @@ return(
          <>
                     {/* SET YOUR TWITTER LINK */}
                     <a
-                    href="https://twitter.com"
+                    href="https://twitter.com/POSCoinFlip"
                     className="flex flex-col justify-center py-2 px-2 rounded-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
                         <span className="sr-only">Check out our twitter!</span>

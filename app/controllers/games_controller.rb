@@ -8,7 +8,6 @@ class GamesController < ApplicationController
     @games = Game.last(10)
     @games = @games.reverse
     
-    # Need to reverse the order of this it seems
     render json: @games, include: [:user]
   end
 
@@ -56,7 +55,8 @@ class GamesController < ApplicationController
     elsif !params[:outcome]
       game[:wagerResult] = -params[:wagerAmount]
     end
-  # Set winstreak
+  
+    # Set winstreak
   if params[:outcome]
       user[:winStreak] += 1
   else user[:winStreak] = 0

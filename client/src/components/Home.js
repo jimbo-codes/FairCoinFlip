@@ -11,7 +11,7 @@ import {ethers} from 'ethers'
 import Web3 from "web3/dist/web3.min";
 // NEED TO USE THIS IMPORT ^, but not using it anyways.
 
-function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet, game, recentGames, setGame, user, setUser, setCall, setResult, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet, game, recentGames, setGame, user, setUser, setCall, setResult, outcome, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate(); // for programatic navigation
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
@@ -139,6 +139,31 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 
     function handleGamble(){
         // FUN MODE: not important code.
+        // Temporary frontend driven game result:
+        let answer = Math.random();
+        setSpin(true);
+        setConfirm(false);
+
+        // GONNA DELETE THIS ---->
+        // if(answer>0.5){
+        //     setResult('Tails')
+        //     if(!!call){
+        //         setOutcome(true);
+        //     }else{
+        //         // Local outcome remains false
+        //         setOutcome(false);
+        //     }
+        // }
+        // else{
+        //     setResult('Heads');
+        //     if(!call){
+        //         setOutcome(true)
+        //     }else{
+        //         setOutcome(false)
+        //     }
+        // }
+
+// DELETE ABOVE HERE.
         if(funMode){
             fetch('/fun_games',{
                 method:'POST',
@@ -149,14 +174,46 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                body: JSON.stringify({
                user_id: user.id,
                wagerAmount: wagerAmount,
-               call: call
-                })           
+               call: call,
+            })
            })
            .then(r=>r.json())
-           .then(data=> {setGame(data)})
+           .then(data=> {
+               setGame(data)
+            //    Here you should set your coin animations (do again for real game)
+            coin.style.animation = "none";
+
+            // RUN THIS IN THE ACTUAL .then of fetch
+            if(!!call){ // Different Flipping animation for when you bet tails:
+                if(data.flipResult){ // result is tails
+                    setTimeout(function(){
+                        coin.style.animation = "spin-tails-W 3s forwards";
+                    }, 100);
+                }else{
+                    setTimeout(function(){
+                        coin.style.animation = "spin-heads-L 3s forwards";
+                    }, 100);
+                }
+            }else{
+            if(data.flipResult){ // this means reuslt is heads.
+                    setTimeout(function(){
+                    coin.style.animation = "spin-tails 3s forwards";
+                    }, 100);    
+            }
+            else{
+                setTimeout(function(){
+                    coin.style.animation = "spin-heads 3s forwards";
+                }, 100);
+            }
+        }
+            // Timeout after the coin spins to send you to results
+            setTimeout(()=>{navigate('/result')}, 3000);
+    
+            })
            .catch(error=> {console.log(error)})
         //    BELOW THIS IS REAL POST FOR REAL GAME
         }else{
+            // This is the code for a real game - not working currently
             fetch('/games',{
                 method:'POST',
                 headers: {
@@ -172,64 +229,21 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
            .then(r=>r.json())
            .then(data=> {setGame(data)})
            .catch(error=> {console.log(error)})
-
         }
         // Real code:
         // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
             // Here go to backend results (and create the random seed)
             // This post is undefined when you make it
             // THIS RETURNS THE BALANCE NOT THE ACTUAL USER ^^
-            
-        // A basic frontend solution for now:
-        let answer = Math.random();
-        setSpin(true)
-        setConfirm(false);
 
-        // For security fairly certain you shouldn't be setting the outcome on frontend
-        if(answer>0.5){
-            setResult('Tails')
-            if(!!call){
-                setOutcome(true)
-            }else{
-                setOutcome(false)
-            }
-        }
-        else{
-            setResult('Heads');
-            if(!call){
-                setOutcome(true)
-            }else{
-                setOutcome(false)
-            }
-        }
+        // A basic frontend solution for now:
+        
+
+        // Here patch your GAME object
         // Make that coin spin beyotch
-        coin.style.animation = "none";
-        if(!!call){ // Different Flipping animation for when you bet tails:
-            if(answer<=0.5){ // this means reuslt is heads.
-                setTimeout(function(){
-                    coin.style.animation = "spin-heads-L 3s forwards";
-                }, 100); 
-            }else{
-                setTimeout(function(){
-                    coin.style.animation = "spin-tails-W 3s forwards";
-                }, 100); 
-            }
-            
-        }else{
-        if(answer<=0.5){ // this means reuslt is heads.
-                setTimeout(function(){
-                    coin.style.animation = "spin-heads 3s forwards";
-                }, 100);    
-        }
-        else{
-            setTimeout(function(){
-                coin.style.animation = "spin-tails 3s forwards";
-            }, 100);
-        }
+
     }
-        // Timeout after the coin spins to send you to results
-        setTimeout(()=>{navigate('/result')}, 3000);
-    }
+
     // let start = 0;
     // let end = 180;
     function flipCoin(e){ // This is when you bet tails.
@@ -252,7 +266,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         }
     }
 
-    function tempHold(){
+    function tempHold(){ /// DELETE THIS AND CHANGE BACK TO STARTGAME funct on click
         let butt = document.getElementById('begin')
         butt.textContent='Going Live soon!'
     }
@@ -271,7 +285,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             {/* </h3> */}
             {/* This pixel font is kinda ugly. You can change it in the font family of tailwind.config. */}
                 <div className="grid place-items-center align-middle" >
-                {auth?<User user={user} funMode={funMode} liveBet={liveBet}/>:null}
+                {auth?<User spin={spin} user={user} funMode={funMode} liveBet={liveBet}/>:null}
 
 {/* If you click tails, rotate 180. if you then click heads, rotate +180 */}
                 <div className="coin" id="coin">
@@ -289,7 +303,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                     </div>
 
                     {/* Render the betting if result is empty. */}
-                    {result===''&&auth&&!confirm&&liveBet?<Game funMode={funMode}error={error} flipCoin={flipCoin} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
+                    {!spin&&auth&&!confirm&&liveBet?<Game funMode={funMode}error={error} flipCoin={flipCoin} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
                     {confirm?<Confirm funMode={funMode} user={user} wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
