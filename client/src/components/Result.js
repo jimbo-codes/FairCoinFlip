@@ -21,7 +21,6 @@ function Result({result, user, setUser, funMode, game, setGame, outcome, wagerAm
 }
 let funFlipResult
 game.flipResult?funFlipResult = 'Tails':funFlipResult = 'Heads'
-
 // let resultObj = {...game,
 //     result:result,
 //     outcome:outcome}
@@ -71,7 +70,7 @@ game.flipResult?funFlipResult = 'Tails':funFlipResult = 'Heads'
 
                     {/* SET THE IMAGE DISPLAYED BASED ON BEING HEADS OR TAILS. Figure out a flipping animation too. */}
                         {game.funUserWin?
-                        result==="Heads"? // Case if won, and result = heads
+                        funFlipResult==="Heads"? // Case if won, and result = heads
                         <div className="flex">
                                     <img className="float-left px-2 justify-center lg h-32 w-auto"
                                     src={coinReverse}

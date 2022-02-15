@@ -193,7 +193,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                     }, 100);
                 }
             }else{
-            if(data.flipResult){ // this means reuslt is heads.
+            if(data.flipResult){ // this means reuslt is tails
                     setTimeout(function(){
                     coin.style.animation = "spin-tails 3s forwards";
                     }, 100);    
