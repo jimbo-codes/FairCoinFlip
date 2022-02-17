@@ -12,7 +12,6 @@
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
     "axios": "^0.25.0",
-    "ethers": "^5.5.4",
     "react": "^17.0.2",
     "react-app-rewired": "^2.1.11",
     "react-dom": "^17.0.2",
@@ -46,7 +45,14 @@
     ]
   },
   "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "@openzeppelin/contracts": "^4.5.0",
     "autoprefixer": "^10.4.2",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4",
+    "hardhat": "^2.8.4",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.18"
   }

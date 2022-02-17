@@ -1,8 +1,13 @@
 # README
 
+Setup game logging (db + recent games)
+Add animation for coin flip
+Set the gas limit for contract to add a zero so it never fails
+Setup stat tracking (real games)
+Clean up the number so its even numbers and not slightly off.
+
+
 Plan of Attack:
-1. How does deploying on polygon work (EVM compatible, etc?)
-   -- you're going to have to be betting with Polygon
 2. How can we roll this out for different communities
    --- A multi tenant architecture - We'd prefer not to give them the source code to implement on their website
    --- In this scenario, we handle it, our smart contract apportions sending a certain amount to them vs. to us. --- AWS Multi tenant approach - https://www.clickittech.com/saas/multi-tenant-architecture/

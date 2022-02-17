@@ -18,8 +18,8 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
     const [errorMessage, setErrorMessage] = useState(null);
     let coin = document.querySelector(".coin");
     const [flipped, setFlipped] = useState(false);
-
-    
+    const [testres, setTestRes] = useState([]);
+  
     // { // Ethers function to force refresh if someone changes network on their acct.
     //     // The "any" network will allow spontaneous network changes
     //     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -32,7 +32,52 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
     //         }
     //     });
     // }
+        const networks = {
+            polygon: {
+              chainId: `0x${Number(137).toString(16)}`,
+              chainName: "Polygon Mainnet",
+              nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18
+              },
+              rpcUrls: ["https://polygon-rpc.com/"],
+              blockExplorerUrls: ["https://polygonscan.com/"]
+            },
+            mumbai: {
+                chainId: '0x13881', // what chainid for mumbai
+                chainName: "Mumbai",
+                
+                nativeCurrency: {
+                  name: "MATIC",
+                  symbol: "MATIC",
+                  decimals: 18
+                },
+                rpcUrls: ["https://matic-mumbai.chainstacklabs.com","https://rpc-mumbai.maticvigil.com","https://matic-testnet-archive-rpc.bwarelabs.com"],
+                blockExplorerUrls: ["https://mumbai.polygonscan.com"]
+              },
+            }
 
+            // Network switch to force polygon login
+            const handleNetworkSwitch = async (networkName) => {
+                setError();
+                await changeNetwork({ networkName, setError });
+              };
+            const changeNetwork = async ({ networkName, setError }) => {
+                try {
+                    if (!window.ethereum) throw new Error("No crypto wallet found");
+                    await window.ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [
+                        {
+                        ...networks[networkName]
+                        }
+                    ]
+                    });
+                } catch (err) {
+                    setError(err.message);
+                }
+                };
         // Onclick function to connect wallet
         function handleLogin(){
     let logBut = document.getElementById('login')
@@ -53,14 +98,15 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 
     //   Get metamask acct info
       async function getAccount() {
+        await handleNetworkSwitch("mumbai") // PUTS USER ON RIGHT NETWORK
+            // this hsould add chain if user doesn't have polygon.
+            // https://docs.metamask.io/guide/rpc-api.html#unrestricted-methods
         await window.ethereum.request({ method: 'eth_requestAccounts' })
         .then(result => {
-            setWallet(result[0]); // sets wallet state to the acct
+            setWallet(result[0]); // sets wallet id state to the acct
             getAccountBalance(result[0]);
-            // console.log(result[0])
-            // I'm not clear if this getbalance works or not (wifi issue?)
+            setAuth(true)
         })
-        .then(() => setAuth(true))
         .catch(error => setErrorMessage(error.message))
         }
 
@@ -68,10 +114,8 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         function getAccountBalance(account) {
 		    window.ethereum.request({method: 'eth_getBalance', params: [account, 'latest']})
 		    .then(balance => {
-                console.log(balance)
             setUser(ethers.utils.formatEther(balance))
 		    })
-            // You're getting an error here?
 		.catch(error => {
 			setErrorMessage(error.message);
 		});
@@ -82,18 +126,46 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             if(e.target.textContent==="Fun Mode"){
                 setFunMode(true);
             }else{setFunMode(false)}
-                // NON FUN MODE CODE BELOW::
-
+            setLiveBet(true)
+            console.log(user)
+            console.log(wallet)
+            fetch(`/users/${wallet}`,{
+                        method:'PATCH',
+                        headers: {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                       },
+                       body: JSON.stringify({
+                           balance: user,
+                            wallet: wallet})
+                    })
+                    .then(r=>r.json())
+                    .then(userData=>setUser(userData))
+                    .catch(error=> {console.log(error)})
             // You're going to sign the one time nonce here (why is this necessary?)
+                // commit + reveal method (w/ nonce, etc.)
             // The fetch to your database to log user information (comment out the patch to update the balance for now)
             // fire the fetch to your DB, if user exists continue, otherwise create.
-            console.log(wallet)
-                fetch(`/me/${wallet}`)
+        }
+    
+    // useeffect to update the user based on game results
+    useEffect(() => { // Once logged in, update user stats on gameupdate. OR wallet update
+        if(auth){
+            fetch(`/me/${wallet}`)
+            .then(r=>r.json())
+            .then(userData=> {setUser(userData)})
+            .catch(error=> {console.log(error)})    
+        }
+        },[game])
+
+        // use effect to update user based on current balance
+    useEffect(()=>{
+        if(auth){
+        fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
                     if(!data.error){
                         setUser(data);
-                        setLiveBet(true)
                     }else{
                         return fetch(`users/`,{
                             method:'POST',
@@ -107,20 +179,11 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                             })
                         })
                         .then(r=>r.json())
-                        .then(data=>{setUser(data);console.log(data);setLiveBet(true)})
+                        .then(data=>{setUser(data);})
                     }            
-                })    
+                })
     }
-    
-    
-    useEffect(() => { // Once logged in, update user stats on gameupdate. OR wallet update
-        if(auth){
-            fetch(`/me/${wallet}`)
-            .then(r=>r.json())
-            .then(userData=> {setUser(userData)})
-            .catch(error=> {console.log(error)})    
-        }
-        },[wallet,game])
+    },[auth])
 
     function handleClick(){
         if(call !==null && !!wagerAmount){    
@@ -137,32 +200,9 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 
     function handleGamble(){
         // FUN MODE: not important code.
-        // Temporary frontend driven game result:
-        let answer = Math.random();
-        setSpin(true);
-        setConfirm(false);
-
-        // GONNA DELETE THIS ---->
-        // if(answer>0.5){
-        //     setResult('Tails')
-        //     if(!!call){
-        //         setOutcome(true);
-        //     }else{
-        //         // Local outcome remains false
-        //         setOutcome(false);
-        //     }
-        // }
-        // else{
-        //     setResult('Heads');
-        //     if(!call){
-        //         setOutcome(true)
-        //     }else{
-        //         setOutcome(false)
-        //     }
-        // }
-
-// DELETE ABOVE HERE.
         if(funMode){
+            setSpin(true);
+        setConfirm(false);
             fetch('/fun_games',{
                 method:'POST',
                 headers: {
@@ -184,6 +224,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             // RUN THIS IN THE ACTUAL .then of fetch
             if(!!call){ // Different Flipping animation for when you bet tails:
                 if(data.flipResult){ // result is tails
+                    // This isnt working how you want - flips heads for a ms.
                     setTimeout(function(){
                         coin.style.animation = "spin-tails-W 3s forwards";
                     }, 100);
@@ -206,40 +247,281 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         }
             // Timeout after the coin spins to send you to results
             setTimeout(()=>{navigate('/result')}, 3000);
-    
             })
            .catch(error=> {console.log(error)})
-        //    BELOW THIS IS REAL POST FOR REAL GAME
-        }else{
-            // This is the code for a real game - not working currently
-            fetch('/games',{
-                method:'POST',
-                headers: {
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({
-               user_id: user.id,
-               wagerAmount: wagerAmount,
-               call: call
-                })           
-           })
-           .then(r=>r.json())
-           .then(data=> {setGame(data)})
-           .catch(error=> {console.log(error)})
+        }else{ // handle the actual game
+            handleChainBet(); // fire the async function to start bet
         }
-        // Real code:
-        // FIRST THING TO DO HERE IS HAVE wallet SIGN THE TRANSACTION & xfer funds, then execute below code (except for the math.)
-            // Here go to backend results (and create the random seed)
-            // This post is undefined when you make it
-            // THIS RETURNS THE BALANCE NOT THE ACTUAL USER ^^
+    }
+// console.log(testres)
+    async function handleChainBet(){
+        // let contractAddy = "0x7ec17de3b4806384876f581fd43844cc27290013" // FOR RINKERBY
+        let contractAddy = "0xef161effbb12fc716f45d11df5c87b11b9483e81" // FOR MUMBAI
+        // STOPPED WORKING WITH THE POLYGON CONTRACT + ABI, figure that out.
+        // The new contract has some issues I think.
+        // RINKEBY ABI:
+        // let contractABI = [
+        //     {
+        //         "inputs": [],
+        //         "stateMutability": "payable",
+        //         "type": "constructor"
+        //     },
+        //     {
+        //         "anonymous": false,
+        //         "inputs": [
+        //             {
+        //                 "indexed": false,
+        //                 "internalType": "bool",
+        //                 "name": "_result",
+        //                 "type": "bool"
+        //             },
+        //             {
+        //                 "indexed": false,
+        //                 "internalType": "uint256",
+        //                 "name": "_bet",
+        //                 "type": "uint256"
+        //             }
+        //         ],
+        //         "name": "GameResult",
+        //         "type": "event"
+        //     },
+        //     {
+        //         "anonymous": false,
+        //         "inputs": [
+        //             {
+        //                 "indexed": true,
+        //                 "internalType": "address",
+        //                 "name": "previousOwner",
+        //                 "type": "address"
+        //             },
+        //             {
+        //                 "indexed": true,
+        //                 "internalType": "address",
+        //                 "name": "newOwner",
+        //                 "type": "address"
+        //             }
+        //         ],
+        //         "name": "OwnershipTransferred",
+        //         "type": "event"
+        //     },
+        //     {
+        //         "inputs": [],
+        //         "name": "getBalance",
+        //         "outputs": [
+        //             {
+        //                 "internalType": "uint256",
+        //                 "name": "",
+        //                 "type": "uint256"
+        //             }
+        //         ],
+        //         "stateMutability": "view",
+        //         "type": "function"
+        //     },
+        //     {
+        //         "inputs": [],
+        //         "name": "owner",
+        //         "outputs": [
+        //             {
+        //                 "internalType": "address",
+        //                 "name": "",
+        //                 "type": "address"
+        //             }
+        //         ],
+        //         "stateMutability": "view",
+        //         "type": "function"
+        //     },
+        //     {
+        //         "inputs": [
+        //             {
+        //                 "internalType": "uint256",
+        //                 "name": "playerChoice",
+        //                 "type": "uint256"
+        //             }
+        //         ],
+        //         "name": "playThat",
+        //         "outputs": [],
+        //         "stateMutability": "payable",
+        //         "type": "function"
+        //     },
+        //     {
+        //         "inputs": [],
+        //         "name": "renounceOwnership",
+        //         "outputs": [],
+        //         "stateMutability": "nonpayable",
+        //         "type": "function"
+        //     },
+        //     {
+        //         "inputs": [
+        //             {
+        //                 "internalType": "address",
+        //                 "name": "newOwner",
+        //                 "type": "address"
+        //             }
+        //         ],
+        //         "name": "transferOwnership",
+        //         "outputs": [],
+        //         "stateMutability": "nonpayable",
+        //         "type": "function"
+        //     },
+        //     {
+        //         "stateMutability": "payable",
+        //         "type": "receive"
+        //     }
+        // ]
 
-        // A basic frontend solution for now:
-        
+        // MUMBAI CONTRACT ABI:
+        let contractABI = [
+            {
+                "inputs": [],
+                "stateMutability": "payable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "bool",
+                        "name": "_result",
+                        "type": "bool"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "_bet",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "GameResult",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "previousOwner",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "OwnershipTransferred",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "playerChoice",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "playThat",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "renounceOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "transferOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "stateMutability": "payable",
+                "type": "receive"
+            },
+            {
+                "inputs": [],
+                "name": "getBalance",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+        // on testnet the call errors saying to bet more than 0.001 ETH (fix this.)
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const signer = provider.getSigner();
+        const testContract = new ethers.Contract(contractAddy, contractABI, signer)
+        // increase bet amount by fee:
+        let betstring = wagerAmount+wagerAmount*0.035;
+        const options = {value: ethers.utils.parseEther(String(betstring))}
+            // Passing in options argument to set the value of our function call
+            const contCall = await testContract.playThat(1, options)
+            // The above fires the metamask popup
+            let receipt = await contCall.wait(1).then( //this then fires on confirm of MM.
+                setConfirm(false),
+                setSpin(true),
 
-        // Here patch your GAME object
-        // Make that coin spin beyotch
+                // Setup your coin spin animations here -- then have it spin once more
+                // for the correct result.
+            )
+            let obj = receipt.events.find(o => o.args);
+            setResult(obj.args)
 
+            // Post to GAMES here
+            // let coinFlipResult;
+            // receipt.events[0].args[0]?coinFlipResult=call:
+//             wagerResult: nil,
+//  flipResult: nil,
+//  userWin: nil,
+//  userStreak: nil,
+            fetch('/games',{
+                        method:'POST',
+                        headers: {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                       },
+                       body: JSON.stringify({
+                       user_id: user.id,
+                       wagerAmount: wagerAmount,
+                       call: call
+                        })           
+                   })
+                   .then(r=>r.json())
+                   .then(data=> {setGame(data)})
+                   .catch(error=> {console.log(error)})
+            // THIS WORKS, now check result item
+            navigate('/result')
     }
 
     // let start = 0;
@@ -264,10 +546,6 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         }
     }
 
-    function tempHold(){ /// DELETE THIS AND CHANGE BACK TO STARTGAME funct on click
-        let butt = document.getElementById('begin')
-        butt.textContent='Going Live soon!'
-    }
     // Have a popup disclaimer once wallet is connected "saying I certify / agree that this is not illegal where I am, etc." (ONCE)
         return(
         <>
@@ -283,7 +561,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             {/* </h3> */}
             {/* This pixel font is kinda ugly. You can change it in the font family of tailwind.config. */}
                 <div className="grid place-items-center align-middle" >
-                {auth?<User spin={spin} user={user} funMode={funMode} liveBet={liveBet}/>:null}
+                {auth&&liveBet?<User spin={spin} user={user} game={game} wallet={wallet} funMode={funMode} liveBet={liveBet}/>:null}
 
 {/* If you click tails, rotate 180. if you then click heads, rotate +180 */}
                 <div className="coin" id="coin">
@@ -306,7 +584,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
                     {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
                     {/* Below button begins the game */}
-                    {!liveBet&&auth?<><button onClick={tempHold} id='begin' className='mt-2 mb-2 px-4 py-2 border-4 border-indigo-500 text-4xl font-header hover:bg-indigo-700 hover:text-white shadow-sm'>Click to begin...</button>
+                    {!liveBet&&auth?<><button onClick={startGame} id='begin' className='mt-2 mb-2 px-4 py-2 border-4 border-indigo-500 text-4xl font-header hover:bg-indigo-700 hover:text-white shadow-sm'>Click to begin...</button>
                     <h3>compete in <button onClick={startGame} className="text-blue-500">Fun Mode</button></h3>
                     </>
                     :null}

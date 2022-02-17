@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     
     
     
-    
+
     
     # Attempted Solutions for CSRF issues:
     # protect_from_forgery

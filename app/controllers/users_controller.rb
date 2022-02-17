@@ -34,19 +34,19 @@ def show
 end
 
  # PATCH /users/1
-  def update
-    user= User.find_by_id(params[:user_id])
-    if params[:outcome]
-      wagerResult = params[:wagerAmount]*2
-    elsif !params[:outcome]
-      wagerResult = -params[:wagerAmount]
-    end
-    user[:balance] += wagerResult
-    # How to track user winstreak
-    # A loop that goes to -> user.first.games.last.result to see if outcome == win
-    
+  def update #THIS FUNCTION ERRORS RANDOMLY - I'm not sure why.
+    # Is this secure? Idts. Should probably use sessions here.
+    params[:wallet] = params[:wallet].downcase
+    user= User.find_by_wallet(params[:wallet])
+    params[:balance] = params[:balance].to_f
+    if(user[:balance] === params[:balance].to_f)
+      render json: user, status: 200
+    else
+    user[:balance] = params[:balance].to_f
     user.save
-    render json:user, status:200
+    render json: user, status: 200
+  end
+
   end
 
 private
