@@ -1,10 +1,45 @@
 # README
 
-Setup game logging (db + recent games)
-Add animation for coin flip
-Set the gas limit for contract to add a zero so it never fails
+Clean up smart contract so its return number == 2x bet and not slightly off.
+Set the gas limit for contract to add a a couple zero's so it never fails
 Setup stat tracking (real games)
-Clean up the number so its even numbers and not slightly off.
+Strip out fun mode to its own component(s) entirely.
+
+meeting w/ taha and jay - go through product as it stands + pre-launch things
+
+
+pre-Launch REQUIRED Checklist:
+1. Fix the 2x contract balance, gas limit default for smart contract.
+2. Have a once over for security risks
+3. Fix the user balance + winstreak
+4. MARKETING + CONTENT + SCHEDULE AND TIMELINE
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Feature List
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+1. Fun mode game filter for recent games
+2. When connecting, force user balance read + update
+3. -- do we want to force wallet connection + login each time? 
+   https://ethereum.stackexchange.com/questions/89848/how-to-automatically-get-users-wallet-info-if-they-are-connected-but-not-show-t
+4. 
+
+DO YOU NEED SESSIONS FOR ANYTHING????
+
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Styling List
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+1. On mouseover of "fun mode" add a box behind
+2. Darkmode -- recent games list color, and have toggle icon on a nav bar somewhere.
+3. Button Styling cleanup (colors)
+4. Coin flip styling - When betting tails it flashes heads for a MS.
+   - you've updated it so that the coin flips for the spin animation by default, setting 180deg starting pt. isnt working for some reason.
+
+
+
+
+
+
 
 
 Plan of Attack:
@@ -25,7 +60,6 @@ Feature List:
 - NFT Staking (Down the line)
 
 Known issues:
-Troubleshoot creating a new user (this could be a no-wifi issue, not clear.)
 Going back and forward causes failed requests + UI bugs.
  setup params require for all
  Setup error handling for all
@@ -35,9 +69,6 @@ Going back and forward causes failed requests + UI bugs.
 Ensure the user has the funds to bet, subtract their funds once they made the bet. <--- as a part of the game creation process calling smart contract.
 
 NEXT STEPS:
-Build out local competition leaderboard (fake money, testmode)
-^^ STAT TRACKING FOR LOCAL -- who has the most fake $$
-Deploy your testnet contract for if they win or lose coin flip
    Have a setup wallet dedicated to paying out wins / losses
 Display logged in wallet on the screen (where on mobile?)
 Put together LIST of the stats you want to track -- user LONGEST winstreak
@@ -46,10 +77,7 @@ Put together LIST of the stats you want to track -- user LONGEST winstreak
 5. Functionality for top Navbar links (leaderboard and backend stuff)
 8. Statistics (consolidated), leaderboard
 9. Replace user_id with sessions (probably after web3js implementation)
-*** Depending on your selection of heads vs. Tails, set the coin image to heads (or tails) ***
-Add onclick rotate (just one flip) for the coin
 5. Small links at bottom (faq, etc)
------ Add social links to the bottom (once authenticated)
 9. steps for deployment on real website?
 2. Dollar conversion for ETH - pull from other proj (update on every game update)
 8. Your desktop should have more User info (more real estate) - show win streak, balance, maybe some other stuff on top right (w/ profile image)

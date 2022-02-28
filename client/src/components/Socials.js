@@ -1,10 +1,10 @@
-function Socials(){
+function Socials({theme}){
 return(
          <>
-                    {/* SET YOUR TWITTER LINK */}
                     <a
                     href="https://twitter.com/POSCoinFlip"
-                    className="flex flex-col justify-center py-2 px-2 rounded-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    id='socials'
+                    className="flex flex-col justify-center py-2 px-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
                         <span className="sr-only">Check out our twitter!</span>
                         <svg className="w-8 h-8" aria-hidden="true" fill="#5DA8DD" viewBox="0 0 20 20">
@@ -12,10 +12,9 @@ return(
                         </svg>
                     </a>
 
-                        {/* SET YOUR DISCORD LINK */}
                     <a
                     href="https://discord.com/invite/agfbM7xH"
-                    className="flex flex-col py-2 px-2 rounded-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    className="flex flex-col py-2 px-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-50"
                     >
                         <span className="sr-only">Come join us on Discord.</span>
                         <svg className="w-8 h-8" aria-hidden="true" width="16" height="16" fill="#5165F6" viewBox="0 0 16 16">
@@ -23,20 +22,19 @@ return(
                         </svg>
                     </a>
 
-
-                    {/* SET MOUSEOVER "coming soon" */}
-                    <div
-                    href="twitter.com"
-                    className="flex flex-col py-2 px-2 w-9 rounded-md bg-white text-sm font-medium text-gray-500 "
-                    // hover:bg-gray-50
+                    {/* SET MOUSEOVER for below "coming soon" */}
+                    <a
+                    href="https://pos-coin-flip.herokuapp.com/"
+                    // set this to your live link once done.
+                    className="flex flex-col py-2 px-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    // This hover should probably be darker in dark mode.
                     >
                         <span className="sr-only">Come join us on Discord.</span>
                         <svg className="w-8 h-8" aria-hidden="true" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                         <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-
                         </svg>
-                    </div>
+                    </a>
                     </>
 );
 }export default Socials

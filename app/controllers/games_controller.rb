@@ -1,9 +1,8 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: %i[ show edit update destroy ]
+  before_action :set_game, only: %i[ show edit destroy ]
 
   # GET /games
   def index
-
     # Get all the games you're gonna include (pick # to show in table)
     @games = Game.last(10)
     @games = @games.reverse
@@ -13,7 +12,7 @@ class GamesController < ApplicationController
 
   # GET /games/1
   def show
-    # Would you nee
+    # Would you need this ever?
   end
 
   # POST /games or /games.json
@@ -30,42 +29,35 @@ class GamesController < ApplicationController
     else
       render json: {error: "Insufficient Balance."}
     end
-    # @game.user
+    # Create game results too.
+    if params[:result][0]
+      @game[:flipResult] = params[:call]
+      @game[:wagerResult] = params[:wagerAmount]*2
+      user[:balance] += @game[:wagerResult] # is this necessary?
+      user[:winStreak] += 1
+    else
+      @game[:flipResult] = !params[:call]
+      @game[:wagerResult] = -params[:wagerAmount]
+      user[:winStreak] = 0
+    end
+    @game[:userWin] = params[:result][0]
+    @game[:userStreak] = user[:winStreak];
+# debugger
+  user.save
+  @game.save
+
     render json: @game, status: 200
   end
 
+
+
+
   # PATCH /games/1
   def update
+    # Not using this, handling all in create action
     user= User.find_by_id(params[:user_id])
     game= Game.find_by_id(params[:id])
-    
     # set flip result and userwin
-    if params[:result] === 'Tails'
-      game[:flipResult] = true
-    elsif params[:result] === 'Heads'
-      game[:flipResult] = false
-    end
-    game[:userWin] = params[:outcome]
-
-    # Set game $$$ distrib, and update user balance and winstreak
-    if params[:outcome]
-      game[:wagerResult] = params[:wagerAmount]*2
-      # Only pay user if they win
-      user[:balance] += game[:wagerResult]
-    elsif !params[:outcome]
-      game[:wagerResult] = -params[:wagerAmount]
-    end
-  
-    # Set winstreak
-  if params[:outcome]
-      user[:winStreak] += 1
-  else user[:winStreak] = 0
-  end
-  game[:userStreak] = user[:winStreak];
-
-  user.save
-  game.save
-
   render json: game, status: 200
   end
 

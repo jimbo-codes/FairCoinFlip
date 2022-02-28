@@ -4,6 +4,8 @@ import React,{useState,useEffect} from "react";
 import Result from './Result';
 import Navigation from './Navigation'
 import Stats from './Stats';
+// RUN npm i use-local-storage
+// import useLocalStorage from 'use-local-storage';
 
 function App() {
 // Some type of wristbanding -- how does this get implemented w/ web3?
@@ -32,8 +34,16 @@ function App() {
   const [statView, setStatView] = useState(false); // to change nav bar when in stats
   const [toggle, setToggle] = useState(false);
   const [leaders, setLeaders] = useState([]);
+  const [toke, setToke] = useState('');
 
-
+// darkmode
+const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const [theme, setTheme] = useState('dark')
+// useLocalStorage('theme', defaultDark ? 'dark' : 'light');
+const switchTheme = () => {
+  const newTheme = theme === 'light' ? 'dark':'light';
+  setTheme(newTheme);
+}
   // Attempted fixes for CSRF Token (Required to make non-fetch requests)
   // const [csrfToken, setcsrfTokenState] = useState('');
   // const thing = document.querySelector("meta[name='csrf-token']").getAttribute("content");
@@ -43,28 +53,79 @@ function App() {
   // console.log(token);
 
   useEffect(() => {
-
-  // This will eventually be wristbanding. for now using it to pull in games array.
   // Have the fetch NOT check if its a checksum'd ETH address. (downcase it)
-    fetch(`/fun_games`)
+    fetch(`/games`)
     .then(r=>r.json())
     .then(games=> {setRecentGames(games)})
     .catch(error=> {console.log(error)})
   },[game])
+  function startGame(e){
+    // If you're playing this in fun mode:
+    // if e == specific play again
+    // console.log(e.textContent)
+    // if(funMode){
+      // let token = '6UbO9mFBQSSS9vE25G6VKVldab5RijyUV0YU4TkFRUfik8tTq-4hvmw28EOaUhWzP_-82Fg8epV2vy0KT8paVA'
+// console.log(token)
+    // }
+    if(e.target.textContent==="Fun Mode"){
+        setFunMode(true);
+    }else{setFunMode(false)}
+    setLiveBet(true)
+    // console.log(user)
+    // console.log(wallet)
+    if(user.balance){
+        fetch(`/users/${wallet}`,{
+            method:'PATCH',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+               balance: user.balance,
+            //    I don't like the way the balance is sent here.
+                wallet: wallet})
+        })
+        .then(r=>r.json())
+        .then(userData=>setUser(userData))
+        .catch(error=> {console.log(error)})
 
+    }else
+    fetch(`/users/${wallet}`,{
+                method:'PATCH',
+                headers: {
+                 'Accept': 'application/json',
+                 'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({
+                   balance: user,
+                //    I don't like the way the balance is sent here.
+                    wallet: wallet})
+            })
+            .then(r=>r.json())
+            .then(userData=>setUser(userData))
+            .catch(error=> {console.log(error)})
+    // You're going to sign the one time nonce here (is this necessary?)
+        // commit + reveal method (w/ nonce, etc.)
+    // The fetch to your database to log user information (comment out the patch to update the balance for now)
+    // fire the fetch to your DB, if user exists continue, otherwise create.
+}
   return (
-    <div> 
+    <div className='App' data-theme={theme}> 
       <div className='top-0'>
-        <Navigation toggle={toggle} setToggle={setToggle} leaders={leaders} setStatView={setStatView}/>
+        <Navigation toggle={toggle} switchTheme={switchTheme} setToggle={setToggle} leaders={leaders} setStatView={setStatView}/>
+        <button onClick={switchTheme}>testing</button>
       </div>
 
       <Routes>
         <Route path='/stats/' element={<Stats leaders={leaders} setLeaders={setLeaders} toggle={toggle} setToggle={setToggle} user={user}></Stats>}/>
-        <Route path='result/' element={<Result user={user} call={call} setUser={setUser} funMode={funMode} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
+        <Route path='result/' element={<Result user={user} call={call} startGame={startGame} wallet={wallet} setWallet={setWallet} setLiveBet={setLiveBet} setUser={setUser} funMode={funMode} game={game} setGame={setGame} outcome={outcome} setOutcome={setOutcome} result={result} setResult={setResult} call={call} setCall={setCall} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} setConfirm={setConfirm}/>}/>
         <Route path='/' element={<Home
         recentGames={recentGames}
         user={user}
+        startGame={startGame}
         game={game}
+        toke={toke}
+        setToke={setToke}
         setGame={setGame}
         funMode={funMode}
         setFunMode={setFunMode}

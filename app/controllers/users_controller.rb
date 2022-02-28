@@ -17,18 +17,23 @@ class UsersController < ApplicationController
   end
 
 
-# GET / Create /users/wallet
+# GET /Show /me/wallet
 def show
+  if protect_against_forgery?
+    cookies['XSRF-TOKEN'] = form_authenticity_token
+  end
   params[:wallet] = params[:wallet].downcase
   user = User.find_by_wallet(params[:wallet])
   if user
     # Is there any value to setting your session id = user id?
-    render json: user, status: 201
+    # render json: {user: user, token: cookies['XSRF-TOKEN']}, status: 201
+    render json: user, status: :ok
   else
-    render json: {error: "The user doesn't yet exist"}
+    render json: {error: "The user doesn't yet exist", token: cookies['XSRF-TOKEN']}
   end
   # Could also rescue from here instead
-
+    
+  # end
   # This probably belongs in the login section, not here.
   # session[:user_id] = @user.id
 end
@@ -37,12 +42,14 @@ end
   def update #THIS FUNCTION ERRORS RANDOMLY - I'm not sure why.
     # Is this secure? Idts. Should probably use sessions here.
     params[:wallet] = params[:wallet].downcase
+    # debugger
+    # Params[:balance] is showing a whole object
     user= User.find_by_wallet(params[:wallet])
     params[:balance] = params[:balance].to_f
-    if(user[:balance] === params[:balance].to_f)
+    if(user[:balance] === params[:balance])
       render json: user, status: 200
     else
-    user[:balance] = params[:balance].to_f
+    user[:balance] = params[:balance]
     user.save
     render json: user, status: 200
   end

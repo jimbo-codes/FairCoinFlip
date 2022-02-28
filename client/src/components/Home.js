@@ -8,16 +8,16 @@ import coinB from '../images/Coin_Tails.png';
 import User from './User';
 import Plays from './Plays';
 import {ethers} from 'ethers'
-import Web3 from "web3/dist/web3.min";
-// NEED TO USE THIS IMPORT ^, but not using it anyways.
+import Web3 from "web3/dist/web3.min"; // web3js caused errors with create react app, fixed it but ended up not using it anyways.
 
-function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet, game, recentGames, setGame, user, setUser, setCall, setResult, outcome, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
+
+function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke, toke, liveBet, setLiveBet, game, recentGames, setGame, user, setUser, setCall, setResult, outcome, setOutcome, result, auth, setAuth, wagerAmount, setWagerAmount, confirm, setConfirm}) {
     const navigate = useNavigate(); // for programatic navigation
     const [error, setError] = useState('');
     const [spin, setSpin] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     let coin = document.querySelector(".coin");
-    const [flipped, setFlipped] = useState(false);
+    const [flipped, setFlipped] = useState(false); // i think delete this and one below.
     const [testres, setTestRes] = useState([]);
   
     // { // Ethers function to force refresh if someone changes network on their acct.
@@ -78,6 +78,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                     setError(err.message);
                 }
                 };
+
         // Onclick function to connect wallet
         function handleLogin(){
     let logBut = document.getElementById('login')
@@ -98,8 +99,9 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 
     //   Get metamask acct info
       async function getAccount() {
+          // Set this to real polygon network eventually::
         await handleNetworkSwitch("mumbai") // PUTS USER ON RIGHT NETWORK
-            // this hsould add chain if user doesn't have polygon.
+            // this should also add chain if user doesn't have polygon.
             // https://docs.metamask.io/guide/rpc-api.html#unrestricted-methods
         await window.ethereum.request({ method: 'eth_requestAccounts' })
         .then(result => {
@@ -115,38 +117,14 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
 		    window.ethereum.request({method: 'eth_getBalance', params: [account, 'latest']})
 		    .then(balance => {
             setUser(ethers.utils.formatEther(balance))
+            // console.log(account)
 		    })
 		.catch(error => {
 			setErrorMessage(error.message);
 		});
     	};
         
-        function startGame(e){
-            // If you're playing this in fun mode:
-            if(e.target.textContent==="Fun Mode"){
-                setFunMode(true);
-            }else{setFunMode(false)}
-            setLiveBet(true)
-            console.log(user)
-            console.log(wallet)
-            fetch(`/users/${wallet}`,{
-                        method:'PATCH',
-                        headers: {
-                         'Accept': 'application/json',
-                         'Content-Type': 'application/json',
-                       },
-                       body: JSON.stringify({
-                           balance: user,
-                            wallet: wallet})
-                    })
-                    .then(r=>r.json())
-                    .then(userData=>setUser(userData))
-                    .catch(error=> {console.log(error)})
-            // You're going to sign the one time nonce here (why is this necessary?)
-                // commit + reveal method (w/ nonce, etc.)
-            // The fetch to your database to log user information (comment out the patch to update the balance for now)
-            // fire the fetch to your DB, if user exists continue, otherwise create.
-        }
+        
     
     // useeffect to update the user based on game results
     useEffect(() => { // Once logged in, update user stats on gameupdate. OR wallet update
@@ -156,17 +134,24 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             .then(userData=> {setUser(userData)})
             .catch(error=> {console.log(error)})    
         }
-        },[game])
+        },[game,result])
 
-        // use effect to update user based on current balance
-    useEffect(()=>{
+        
+        function getCookie(key) {
+            var b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+            return b ? b.pop() : "";
+          }
+
+    useEffect(()=>{ // use effect to create new user if none exists
         if(auth){
         fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
-                    if(!data.error){
-                        setUser(data);
-                    }else{
+                    localStorage.setItem('token', data.token)
+                    console.log(data.token)
+                    setToke(localStorage.getItem("token"))
+                    console.log(localStorage.getItem("token"))
+                    if(data.error){
                         return fetch(`users/`,{
                             method:'POST',
                             headers: {
@@ -185,7 +170,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
     }
     },[auth])
 
-    function handleClick(){
+    function handleClick(){ // erro handling for making bets
         if(call !==null && !!wagerAmount){    
             setError('')
             setConfirm(true)
@@ -199,30 +184,27 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
         }
 
     function handleGamble(){
-        // FUN MODE: not important code.
         if(funMode){
             setSpin(true);
-        setConfirm(false);
-            fetch('/fun_games',{
-                method:'POST',
-                headers: {
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({
-               user_id: user.id,
-               wagerAmount: wagerAmount,
-               call: call,
+            setConfirm(false);
+                fetch('/fun_games',{
+                    method:'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                user_id: user.id,
+                wagerAmount: wagerAmount,
+                call: call,
+                })
             })
-           })
            .then(r=>r.json())
-           .then(data=> {
-               setGame(data)
-            //    Here you should set your coin animations (do again for real game)
+           .then(data=> {setGame(data)
             coin.style.animation = "none";
-
-            // RUN THIS IN THE ACTUAL .then of fetch
             if(!!call){ // Different Flipping animation for when you bet tails:
+                // console.log(call)
+                // console.log(data.flipResult)
                 if(data.flipResult){ // result is tails
                     // This isnt working how you want - flips heads for a ms.
                     setTimeout(function(){
@@ -253,7 +235,6 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             handleChainBet(); // fire the async function to start bet
         }
     }
-// console.log(testres)
     async function handleChainBet(){
         // let contractAddy = "0x7ec17de3b4806384876f581fd43844cc27290013" // FOR RINKERBY
         let contractAddy = "0xef161effbb12fc716f45d11df5c87b11b9483e81" // FOR MUMBAI
@@ -491,20 +472,17 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
             let receipt = await contCall.wait(1).then( //this then fires on confirm of MM.
                 setConfirm(false),
                 setSpin(true),
-
                 // Setup your coin spin animations here -- then have it spin once more
+
+                setTimeout(function(){
+                    coin.style.animation = "spin-heads-live 15s forwards";
+                }, 100)
                 // for the correct result.
             )
             let obj = receipt.events.find(o => o.args);
             setResult(obj.args)
 
-            // Post to GAMES here
-            // let coinFlipResult;
             // receipt.events[0].args[0]?coinFlipResult=call:
-//             wagerResult: nil,
-//  flipResult: nil,
-//  userWin: nil,
-//  userStreak: nil,
             fetch('/games',{
                         method:'POST',
                         headers: {
@@ -514,30 +492,24 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                        body: JSON.stringify({
                        user_id: user.id,
                        wagerAmount: wagerAmount,
-                       call: call
+                       call: call,
+                       result: obj.args
                         })           
                    })
                    .then(r=>r.json())
-                   .then(data=> {setGame(data)})
+                   .then(data=> {setGame(data);console.log(data)})
+                    .then(navigate('/result'))
                    .catch(error=> {console.log(error)})
-            // THIS WORKS, now check result item
-            navigate('/result')
+            // changed to navigate AFTER the post is made.
     }
 
-    // let start = 0;
-    // let end = 180;
-    function flipCoin(e){ // This is when you bet tails.
+    function flipCoin(e){ // Swap side of coin based on bet
         if(e.target.textContent==='Tails'){
-        //    These variables ended up not being necessary.
-            // coin.style.setProperty('--start', start+'deg')
-            // coin.style.setProperty('--end', end+'deg')
             setTimeout(function(){
                 coin.style.animation = "flip-tails 1s forwards";
             }, 100);
         }
         else {
-            // coin.style.setProperty('--start', start+'deg')
-            // coin.style.setProperty('--end', end+'deg')
             if(call !== 1){
                 setTimeout(function(){
                     coin.style.animation = "flip-heads 1s forwards";
@@ -563,8 +535,23 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                 <div className="grid place-items-center align-middle" >
                 {auth&&liveBet?<User spin={spin} user={user} game={game} wallet={wallet} funMode={funMode} liveBet={liveBet}/>:null}
 
-{/* If you click tails, rotate 180. if you then click heads, rotate +180 */}
+                {spin && call?
+                // Animation isnt perfect when betting tails - it still flashes heads for a MS.
                 <div className="coin" id="coin">
+                <div id="coinH" className="heads">
+                    <img className="float-left justify-center lg h-42 w-auto"
+                    src={coinB}
+                    alt="Future Flip Tails"/>
+                    </div>
+                <div className="tails absolute justify-center"> 
+                    <img className="float-left justify-center lg h-42 w-auto"
+                    src={coinF}
+                    alt="Future Flip Heads"/>
+                    </div>
+                </div>
+
+                :
+                    <div className="coin" id="coin">
                     <div id="coinH" className="heads"> 
                         <img className="float-left justify-center lg h-42 w-auto"
                         src={coinF}
@@ -577,7 +564,7 @@ function Home({call, wallet, setWallet, funMode, setFunMode, liveBet, setLiveBet
                         alt="Future Flip Tails"/>
                         </div>
                     </div>
-
+                }
                     {/* Render the betting if result is empty. */}
                     {!spin&&auth&&!confirm&&liveBet?<Game funMode={funMode}error={error} flipCoin={flipCoin} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
                     {confirm?<Confirm funMode={funMode} user={user} wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}

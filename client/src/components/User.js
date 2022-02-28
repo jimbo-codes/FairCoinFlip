@@ -4,7 +4,6 @@ function User({user, spin, game, funMode, wallet, liveBet}){
     // We need to work on the sizing depending on screen res.
     // What should mobile flow look like. what info is displayed?
     // Probably JUST do balance, and put rest in statistics?
-
     // Here: the user should be updated at the end of each game.
     // useEffect(()=>{
     //     fetch(`/users/${wallet}`,{
@@ -23,7 +22,13 @@ function User({user, spin, game, funMode, wallet, liveBet}){
     // },[game,liveBet])
     // Conditional rounding to display appropriate number of decimals based on bal?
     let rounded
-    funMode?rounded = Number(user.funBal).toFixed(3):rounded = Number(user.balance).toFixed(2)
+    if(user.funBal){
+        funMode?rounded = Number(user.funBal).toFixed(3):rounded = Number(user.balance).toFixed(2)
+    }
+
+    // else{
+    //     funMode?rounded = Number(user).toFixed(3):rounded = Number(user).toFixed(2)
+    // }
 return(
     <>
     {liveBet&&!spin?

@@ -12,8 +12,6 @@ class FunGamesController < ApplicationController
 
     # POST /funGames
     def create
-      # Handle the random num and outcome setting here
-
       # Create the fun game in same format, update the relevant user fun items.
     user= User.find_by_id(params[:user_id])
     if(user[:funBal]>=params[:wagerAmount])
@@ -30,6 +28,7 @@ class FunGamesController < ApplicationController
       funGame[:flipResult] = false; #This means its tails
     end
   
+    # Set the outcome, flip result, wager result, user funstreak, user funbal
     if funGame[:flipResult] === funGame[:call]
       funGame[:funUserWin] = true
       funGame[:wagerResult] = params[:wagerAmount]*2
@@ -40,8 +39,6 @@ class FunGamesController < ApplicationController
       funGame[:funUserWin] = false
       user[:funStreak] = 0
     end
-    # Set the outcome, flip result, wager result, user funstreak, user funbal
-  # Set winstreak on game obj.
   funGame[:funUserStreak] = user[:funStreak];    
 
   user.save
@@ -62,29 +59,14 @@ class FunGamesController < ApplicationController
         elsif params[:result] === 'Heads'
           funGame[:flipResult] = false
         end
-        funGame[:funUserWin] = params[:outcome]
-    
-        # Set funGame $$$ distrib, and update user balance and winstreak
-
-        if params[:outcome]
-          funGame[:wagerResult] = params[:wagerAmount]*2
-          # Only pay user if they win
-          user[:funBal] += funGame[:wagerResult]
-        elsif !params[:outcome]
-          funGame[:wagerResult] = -params[:wagerAmount]
-        end
-      # Set winstreak
-      if params[:outcome]
-          user[:funStreak] += 1
-      else user[:funStreak] = 0
-      end
+        funGame[:funUserWin] = params[:funUserWin]
+            
       funGame[:funUserStreak] = user[:funStreak];    
     
       user.save
       funGame.save
     
       render json: funGame, status: 200
-
     end
 
     private
