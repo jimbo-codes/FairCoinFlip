@@ -26,8 +26,11 @@ def show
   user = User.find_by_wallet(params[:wallet])
   if user
     # Is there any value to setting your session id = user id?
-    # render json: {user: user, token: cookies['XSRF-TOKEN']}, status: 201
-    render json: user, status: :ok
+    render json: {user: user, token: cookies['XSRF-TOKEN']}, status: 201
+    # Set this token in cookies (do in sessions later.)
+    
+    # if you dont want to send back the token use this
+    # render json: user, status: :ok\
   else
     render json: {error: "The user doesn't yet exist", token: cookies['XSRF-TOKEN']}
   end

@@ -131,12 +131,12 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
         if(auth){
             fetch(`/me/${wallet}`)
             .then(r=>r.json())
-            .then(userData=> {setUser(userData)})
+            .then(userData=> {setUser(userData.user)})
             .catch(error=> {console.log(error)})    
         }
         },[game,result])
 
-        
+// console.log(user)        
         function getCookie(key) {
             var b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
             return b ? b.pop() : "";
@@ -147,10 +147,11 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
         fetch(`/me/${wallet}`)
                 .then((r) => r.json())
                 .then(data=>{ 
+                    // console.log(data)
                     localStorage.setItem('token', data.token)
-                    console.log(data.token)
+                    // console.log(data.token)
                     setToke(localStorage.getItem("token"))
-                    console.log(localStorage.getItem("token"))
+                    // console.log(localStorage.getItem("token"))
                     if(data.error){
                         return fetch(`users/`,{
                             method:'POST',
@@ -237,7 +238,9 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
     }
     async function handleChainBet(){
         // let contractAddy = "0x7ec17de3b4806384876f581fd43844cc27290013" // FOR RINKERBY
-        let contractAddy = "0xef161effbb12fc716f45d11df5c87b11b9483e81" // FOR MUMBAI
+        let contractAddy = "0x61C9aD3FeEe27c9A8b9048dAdDE1dd8315C63F74" // Fixed mumbai contract (math).
+        
+        // let contractAddy = "0xef161effbb12fc716f45d11df5c87b11b9483e81" // FOR MUMBAI
         // STOPPED WORKING WITH THE POLYGON CONTRACT + ABI, figure that out.
         // The new contract has some issues I think.
         // RINKEBY ABI:
@@ -352,121 +355,145 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
 
         // MUMBAI CONTRACT ABI:
         let contractABI = [
-            {
-                "inputs": [],
-                "stateMutability": "payable",
-                "type": "constructor"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": false,
-                        "internalType": "bool",
-                        "name": "_result",
-                        "type": "bool"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint256",
-                        "name": "_bet",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "GameResult",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "previousOwner",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "newOwner",
-                        "type": "address"
-                    }
-                ],
-                "name": "OwnershipTransferred",
-                "type": "event"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "playerChoice",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "playThat",
-                "outputs": [],
-                "stateMutability": "payable",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "renounceOwnership",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "newOwner",
-                        "type": "address"
-                    }
-                ],
-                "name": "transferOwnership",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "stateMutability": "payable",
-                "type": "receive"
-            },
-            {
-                "inputs": [],
-                "name": "getBalance",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "owner",
-                "outputs": [
-                    {
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            }
+                {
+                    "inputs": [],
+                    "stateMutability": "payable",
+                    "type": "constructor"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "internalType": "bool",
+                            "name": "_result",
+                            "type": "bool"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "uint256",
+                            "name": "_bet",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "GameResult",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "previousOwner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "newOwner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "OwnershipTransferred",
+                    "type": "event"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "playerChoice",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "playThat",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "renounceOwnership",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "newOwner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "transferOwnership",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "stateMutability": "payable",
+                    "type": "receive"
+                },
+                {
+                    "inputs": [],
+                    "name": "getBalance",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "owner",
+                    "outputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            
         ]
-        // on testnet the call errors saying to bet more than 0.001 ETH (fix this.)
         const provider = new ethers.providers.Web3Provider(window.ethereum)
+        // const gasPrice = await provider.getGasPrice() // This is ethersJS gas estimation
+        // console.log(gasPrice) // it was NOT ACCURATE though.
+        // console.log(ethers.utils.formatUnits(gasPrice._hex, "wei")) 
+        
+        const feeData = await provider.getFeeData(); // etherjs inbuilt fee estimation info
+        // console.log(feeData)
+        // console.log(feeData.gasPrice._hex)
+        // IS THIS RELEVANT on MAINNET? Test w/ hardhat once deployed.
+
+        // const gaspx = ethers.utils.formatUnits(feeData.gasPrice._hex, "gwei")
+        // const maxfee = ethers.utils.formatUnits(feeData.maxFeePerGas._hex, "gwei")
+        // const maxprio = ethers.utils.formatUnits(feeData.maxPriorityFeePerGas._hex, "gwei")
+        // set these: gasLimit, maxPriorityFeePerGas (miner prio), and MaxFeePerGas
+        // console.log(gaspx)
+        // console.log(maxfee)
+        // console.log(maxprio)
+        const gasLimit = 350620 // 10x what the defaultish gas limit is.
+        const gasPrio = 30000000000 // 30 gwei, new minimum for mumbai testnet
+        const gasFee = 30000000000 // max fee per unit of gas
+
         const signer = provider.getSigner();
         const testContract = new ethers.Contract(contractAddy, contractABI, signer)
         // increase bet amount by fee:
-        let betstring = wagerAmount+wagerAmount*0.035;
-        const options = {value: ethers.utils.parseEther(String(betstring))}
-            // Passing in options argument to set the value of our function call
+        let betstring = wagerAmount+wagerAmount*0.034;
+        const options = {
+            value: ethers.utils.parseEther(String(betstring)),
+            maxFeePerGas: gasFee,
+            maxPriorityFeePerGas: gasPrio,
+            gasLimit: gasLimit
+        }
             const contCall = await testContract.playThat(1, options)
             // The above fires the metamask popup
             let receipt = await contCall.wait(1).then( //this then fires on confirm of MM.
@@ -498,7 +525,10 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
                    })
                    .then(r=>r.json())
                    .then(data=> {setGame(data);console.log(data)})
-                    .then(navigate('/result'))
+                    .then(data =>{
+                        console.log(obj.args);
+                        navigate('/result');
+                    })
                    .catch(error=> {console.log(error)})
             // changed to navigate AFTER the post is made.
     }
@@ -569,7 +599,7 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
                     {!spin&&auth&&!confirm&&liveBet?<Game funMode={funMode}error={error} flipCoin={flipCoin} setGame={setGame} wagerAmount={wagerAmount} setWagerAmount={setWagerAmount} call={call} setCall={setCall} handleClick={handleClick}></Game>:null}
                     {confirm?<Confirm funMode={funMode} user={user} wagerAmount={wagerAmount} call={call} setConfirm={setConfirm} handleGamble={handleGamble}/>:null}
                     {spin?<h3 className='font-header text-center mt-8 mb-4 text-2xl'>We're rooting for you...</h3>:null}
-                    {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
+                    {auth?null:<button disabled={auth} onClick={handleLogin} id="login" className="butt mt-2 mb-2 px-4 py-2 border border-transparent text-l font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Select Wallet</button>}
                     {/* Below button begins the game */}
                     {!liveBet&&auth?<><button onClick={startGame} id='begin' className='mt-2 mb-2 px-4 py-2 border-4 border-indigo-500 text-4xl font-header hover:bg-indigo-700 hover:text-white shadow-sm'>Click to begin...</button>
                     <h3>compete in <button onClick={startGame} className="text-blue-500">Fun Mode</button></h3>
@@ -578,7 +608,7 @@ function Home({call, startGame, wallet, setWallet, funMode, setFunMode, setToke,
                     {liveBet?null:
                     <>
                     <h3 className='font-header text-center mt-8 mb-4 text-4xl'>Recent Games</h3>
-                    <div className="shadow-lg container mx-auto bg-white w-auto mt-2 divide-gray-200" id="market-table">
+                    <div className="shadow-lg container mx-auto bg-white w-auto mt-2" id="market-table">
                         <ul>
                             {Array.isArray(recentGames)?recentGames.map((game)=> {
                                 return <Plays key={game.id} game={game}/>

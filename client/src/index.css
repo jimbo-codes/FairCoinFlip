@@ -36,36 +36,52 @@
     border-radius: 5px;
     cursor: pointer;
 }
+:root {
+    --background: white;
+    /* Can set background2 for the table here */
+    --text-primary: black;
+    --text-secondary: royalblue;
+    --accent: purple;
+    --buttons: rgb(79 70 229); /* SET BUTTON COLOR HERE */
+    --buttons2: rgb(22 163 74); /* The fire it up / secondary button */
+  }
+  [data-theme='dark'] {
+    /* Set a variable to color the TABLE */
+  --background: black;
+  --text-primary: white;
+  --text-secondary: rgb(148, 148, 148);
+  --accent: darkred;
+  --buttons: rgb(79 70 229);
+  --buttons2: rgb(22 163 74); /* The fire it up / secondary button */
+  min-height: 100vh;
+  min-width: 100%;
+}
 
 .App {
     color: var(--text-primary);
     background-color: var(--background);
-    font-size: large;
     font-weight: bold;
-    padding: 20px;
-    height: calc(100vh - 40px);
-    transition: all .5s;
+    /* padding: 20px; */
+    overflow-x:hidden;
   }
-/* #socials {
-    background-color: (black);
-} */
-/* temporary dark mode */
-:root {
-    --background: white;
-    --text-primary: black;
-    --text-secondary: royalblue;
-    --accent: purple;
-  }
+
+.butt { /* This is the primary indigo button */
+    background-color: var(--buttons);
+}
+.butt2 {
+    background-color: var(--buttons2);
+}
+#market-table {
+    color: var(--text-secondary);
+    background-color: var(--background);
+    /* can set background2 var for table */
+    border-color: #ff0000;
+}
+#table {
+    /* Set variable for border color here */
+    border-color: rgb(241, 99, 99)
+}
   
-  [data-theme='dark'] {
-    --background: black;
-    --text-primary: white;
-    --text-secondary: grey;
-    --accent: darkred;
-    min-height: 100vh;
-    overflow-y: scroll;
-    min-width: 100%;
-  }
   
 /* Heads result when betting heads. */
 @keyframes spin-heads{

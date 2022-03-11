@@ -41,16 +41,10 @@ const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 const [theme, setTheme] = useState('dark')
 // useLocalStorage('theme', defaultDark ? 'dark' : 'light');
 const switchTheme = () => {
+  // Here -> Store this in state so its remembered for user when you go to site.
   const newTheme = theme === 'light' ? 'dark':'light';
   setTheme(newTheme);
 }
-  // Attempted fixes for CSRF Token (Required to make non-fetch requests)
-  // const [csrfToken, setcsrfTokenState] = useState('');
-  // const thing = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-  //  let thing = document.head.querySelector("[name='csrf-token']").content
-  // console.log(thing);
-  // const token = document.querySelector('[name="csrf-token"]') || {content: 'no-csrf-token'}
-  // console.log(token);
 
   useEffect(() => {
   // Have the fetch NOT check if its a checksum'd ETH address. (downcase it)
@@ -60,19 +54,11 @@ const switchTheme = () => {
     .catch(error=> {console.log(error)})
   },[game])
   function startGame(e){
-    // If you're playing this in fun mode:
-    // if e == specific play again
-    // console.log(e.textContent)
-    // if(funMode){
-      // let token = '6UbO9mFBQSSS9vE25G6VKVldab5RijyUV0YU4TkFRUfik8tTq-4hvmw28EOaUhWzP_-82Fg8epV2vy0KT8paVA'
-// console.log(token)
-    // }
     if(e.target.textContent==="Fun Mode"){
         setFunMode(true);
     }else{setFunMode(false)}
     setLiveBet(true)
-    // console.log(user)
-    // console.log(wallet)
+
     if(user.balance){
         fetch(`/users/${wallet}`,{
             method:'PATCH',
@@ -82,7 +68,7 @@ const switchTheme = () => {
            },
            body: JSON.stringify({
                balance: user.balance,
-            //    I don't like the way the balance is sent here.
+            //    Used to have to_f issues with balance being sent like this. check if still the case.
                 wallet: wallet})
         })
         .then(r=>r.json())
@@ -104,17 +90,16 @@ const switchTheme = () => {
             .then(r=>r.json())
             .then(userData=>setUser(userData))
             .catch(error=> {console.log(error)})
-    // You're going to sign the one time nonce here (is this necessary?)
+    // You should sign the one time nonce here (for tx logging so you know who initiated a flip)
         // commit + reveal method (w/ nonce, etc.)
     // The fetch to your database to log user information (comment out the patch to update the balance for now)
     // fire the fetch to your DB, if user exists continue, otherwise create.
 }
   return (
     <div className='App' data-theme={theme}> 
-      <div className='top-0'>
+      {/* <div className='top-0'> */}
         <Navigation toggle={toggle} switchTheme={switchTheme} setToggle={setToggle} leaders={leaders} setStatView={setStatView}/>
-        <button onClick={switchTheme}>testing</button>
-      </div>
+      {/* </div> */}
 
       <Routes>
         <Route path='/stats/' element={<Stats leaders={leaders} setLeaders={setLeaders} toggle={toggle} setToggle={setToggle} user={user}></Stats>}/>
